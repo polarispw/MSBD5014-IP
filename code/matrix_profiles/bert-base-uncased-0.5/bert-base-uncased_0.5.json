@@ -1,0 +1,1370 @@
+{
+    "encoder.layer.0.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.45409947633743286,
+        "min_weight": -0.5249173641204834,
+        "mean_weight": 3.558379830792546e-05,
+        "max_singular_value": 4.985123157501221,
+        "min_singular_value_90": 0.5076968669891357,
+        "sum_singular_values_90": 625.8881907463074,
+        "num_rank_90": 472,
+        "rank90_ratio": 0.6145833333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016255440190434456,
+        "relative_p1_error": 48.17391105625895,
+        "p2_error": 15.733381271362305
+    },
+    "encoder.layer.0.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.8334630131721497,
+        "min_weight": -0.7098265886306763,
+        "mean_weight": 4.959386842529057e-06,
+        "max_singular_value": 6.082370281219482,
+        "min_singular_value_90": 0.5039507150650024,
+        "sum_singular_values_90": 622.9564576745033,
+        "num_rank_90": 474,
+        "rank90_ratio": 0.6171875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016287527978420258,
+        "relative_p1_error": 49.13130914489733,
+        "p2_error": 15.775224685668945
+    },
+    "encoder.layer.0.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.19317074120044708,
+        "min_weight": -0.16439175605773926,
+        "mean_weight": -3.3003136195475236e-05,
+        "max_singular_value": 2.2254467010498047,
+        "min_singular_value_90": 0.3634287714958191,
+        "sum_singular_values_90": 437.79946610331535,
+        "num_rank_90": 487,
+        "rank90_ratio": 0.6341145833333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.011860193684697151,
+        "relative_p1_error": 52.28066588665148,
+        "p2_error": 11.481043815612793
+    },
+    "encoder.layer.0.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.5869761109352112,
+        "min_weight": -0.49465838074684143,
+        "mean_weight": -2.073558971460443e-05,
+        "max_singular_value": 2.828512191772461,
+        "min_singular_value_90": 0.34128057956695557,
+        "sum_singular_values_90": 422.0543733537197,
+        "num_rank_90": 486,
+        "rank90_ratio": 0.6328125,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.011052858084440231,
+        "relative_p1_error": 50.37449209181092,
+        "p2_error": 10.685253143310547
+    },
+    "encoder.layer.0.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.32221561670303345,
+        "min_weight": -0.2978421151638031,
+        "mean_weight": -3.043880315090064e-05,
+        "max_singular_value": 12.811607360839844,
+        "min_singular_value_90": 1.2099924087524414,
+        "sum_singular_values_90": 1300.5143945217133,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.015947217121720314,
+        "relative_p1_error": 53.85235093685298,
+        "p2_error": 30.87797737121582
+    },
+    "encoder.layer.0.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 0.7699131965637207,
+        "min_weight": -1.6790950298309326,
+        "mean_weight": -8.50341166369617e-05,
+        "max_singular_value": 7.1629862785339355,
+        "min_singular_value_90": 1.2121278047561646,
+        "sum_singular_values_90": 1287.059346318245,
+        "num_rank_90": 630,
+        "rank90_ratio": 0.8203125,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016132377088069916,
+        "relative_p1_error": 57.82102235478125,
+        "p2_error": 31.260353088378906
+    },
+    "encoder.layer.1.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3042333424091339,
+        "min_weight": -0.3893543779850006,
+        "mean_weight": -0.00029593592626042664,
+        "max_singular_value": 4.488303184509277,
+        "min_singular_value_90": 0.5167043209075928,
+        "sum_singular_values_90": 625.2145603895187,
+        "num_rank_90": 478,
+        "rank90_ratio": 0.6223958333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01667196676135063,
+        "relative_p1_error": 49.79948221456204,
+        "p2_error": 16.153234481811523
+    },
+    "encoder.layer.1.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3608516752719879,
+        "min_weight": -0.3605247437953949,
+        "mean_weight": 2.72575252893148e-05,
+        "max_singular_value": 5.840445041656494,
+        "min_singular_value_90": 0.5013951659202576,
+        "sum_singular_values_90": 613.2549352049828,
+        "num_rank_90": 474,
+        "rank90_ratio": 0.6171875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015984833240509033,
+        "relative_p1_error": 47.94726321316578,
+        "p2_error": 15.468659400939941
+    },
+    "encoder.layer.1.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.19265544414520264,
+        "min_weight": -0.213004931807518,
+        "mean_weight": 7.1435952122556046e-06,
+        "max_singular_value": 2.5526134967803955,
+        "min_singular_value_90": 0.3502042889595032,
+        "sum_singular_values_90": 427.67895340919495,
+        "num_rank_90": 489,
+        "rank90_ratio": 0.63671875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.011510156095027924,
+        "relative_p1_error": 51.522465687294236,
+        "p2_error": 11.132530212402344
+    },
+    "encoder.layer.1.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.36102530360221863,
+        "min_weight": -0.3103193938732147,
+        "mean_weight": 2.9250351872178726e-05,
+        "max_singular_value": 2.4848668575286865,
+        "min_singular_value_90": 0.3427293300628662,
+        "sum_singular_values_90": 417.8199094235897,
+        "num_rank_90": 486,
+        "rank90_ratio": 0.6328125,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01108251791447401,
+        "relative_p1_error": 51.53266391502744,
+        "p2_error": 10.727277755737305
+    },
+    "encoder.layer.1.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.5060412883758545,
+        "min_weight": -0.3095530867576599,
+        "mean_weight": 9.177094761980698e-05,
+        "max_singular_value": 12.474617958068848,
+        "min_singular_value_90": 1.284867763519287,
+        "sum_singular_values_90": 1364.0113213062286,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016768114641308784,
+        "relative_p1_error": 54.10879239709544,
+        "p2_error": 32.470027923583984
+    },
+    "encoder.layer.1.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 1.1917608976364136,
+        "min_weight": -2.1522269248962402,
+        "mean_weight": -5.743037036154419e-05,
+        "max_singular_value": 9.106291770935059,
+        "min_singular_value_90": 1.2453522682189941,
+        "sum_singular_values_90": 1341.4392640590668,
+        "num_rank_90": 625,
+        "rank90_ratio": 0.8138020833333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016353348270058632,
+        "relative_p1_error": 55.789697695027684,
+        "p2_error": 31.71236801147461
+    },
+    "encoder.layer.2.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.5180970430374146,
+        "min_weight": -0.5282999873161316,
+        "mean_weight": 4.43323515355587e-05,
+        "max_singular_value": 8.223136901855469,
+        "min_singular_value_90": 0.5394207835197449,
+        "sum_singular_values_90": 661.417883515358,
+        "num_rank_90": 472,
+        "rank90_ratio": 0.6145833333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.017076335847377777,
+        "relative_p1_error": 46.53835563923087,
+        "p2_error": 16.586423873901367
+    },
+    "encoder.layer.2.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.46017828583717346,
+        "min_weight": -0.45533061027526855,
+        "mean_weight": 3.760128311114386e-05,
+        "max_singular_value": 7.5195417404174805,
+        "min_singular_value_90": 0.5034690499305725,
+        "sum_singular_values_90": 635.6180104613304,
+        "num_rank_90": 465,
+        "rank90_ratio": 0.60546875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01590779796242714,
+        "relative_p1_error": 44.38269869472647,
+        "p2_error": 15.435124397277832
+    },
+    "encoder.layer.2.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.20702815055847168,
+        "min_weight": -0.18934692442417145,
+        "mean_weight": -5.0979509978787974e-05,
+        "max_singular_value": 2.541934013366699,
+        "min_singular_value_90": 0.347219318151474,
+        "sum_singular_values_90": 419.8925955593586,
+        "num_rank_90": 485,
+        "rank90_ratio": 0.6315104166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.011334981769323349,
+        "relative_p1_error": 51.73183363073887,
+        "p2_error": 10.95436954498291
+    },
+    "encoder.layer.2.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.24440152943134308,
+        "min_weight": -0.26867255568504333,
+        "mean_weight": -2.535044814067078e-06,
+        "max_singular_value": 2.462430238723755,
+        "min_singular_value_90": 0.33595773577690125,
+        "sum_singular_values_90": 408.46817696094513,
+        "num_rank_90": 482,
+        "rank90_ratio": 0.6276041666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.011035652831196785,
+        "relative_p1_error": 52.50105073506261,
+        "p2_error": 10.692036628723145
+    },
+    "encoder.layer.2.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.5733839869499207,
+        "min_weight": -0.6285343766212463,
+        "mean_weight": 7.529714639531448e-05,
+        "max_singular_value": 12.526004791259766,
+        "min_singular_value_90": 1.2758244276046753,
+        "sum_singular_values_90": 1385.5505511760712,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016653984785079956,
+        "relative_p1_error": 52.989366851906375,
+        "p2_error": 32.32183074951172
+    },
+    "encoder.layer.2.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 1.0374956130981445,
+        "min_weight": -3.3303322792053223,
+        "mean_weight": -3.951052713091485e-05,
+        "max_singular_value": 8.180150032043457,
+        "min_singular_value_90": 1.266128659248352,
+        "sum_singular_values_90": 1356.6848287582397,
+        "num_rank_90": 628,
+        "rank90_ratio": 0.8177083333333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016562052071094513,
+        "relative_p1_error": 55.81033753147603,
+        "p2_error": 32.17367172241211
+    },
+    "encoder.layer.3.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.33337512612342834,
+        "min_weight": -0.3360261619091034,
+        "mean_weight": 0.0002886436996050179,
+        "max_singular_value": 4.529306411743164,
+        "min_singular_value_90": 0.5233787894248962,
+        "sum_singular_values_90": 637.0827220082283,
+        "num_rank_90": 480,
+        "rank90_ratio": 0.625,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.017056958749890327,
+        "relative_p1_error": 50.26084926232118,
+        "p2_error": 16.47886848449707
+    },
+    "encoder.layer.3.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.34538698196411133,
+        "min_weight": -0.3447047173976898,
+        "mean_weight": 1.510148103989195e-05,
+        "max_singular_value": 5.6636176109313965,
+        "min_singular_value_90": 0.5141332149505615,
+        "sum_singular_values_90": 624.5580370426178,
+        "num_rank_90": 476,
+        "rank90_ratio": 0.6197916666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016639666631817818,
+        "relative_p1_error": 49.36341776522132,
+        "p2_error": 16.073759078979492
+    },
+    "encoder.layer.3.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.19132950901985168,
+        "min_weight": -0.18246334791183472,
+        "mean_weight": -6.747680163243786e-05,
+        "max_singular_value": 2.857832431793213,
+        "min_singular_value_90": 0.3760676383972168,
+        "sum_singular_values_90": 462.8109862804413,
+        "num_rank_90": 483,
+        "rank90_ratio": 0.62890625,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01214592531323433,
+        "relative_p1_error": 49.70316645316725,
+        "p2_error": 11.720209121704102
+    },
+    "encoder.layer.3.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.26478344202041626,
+        "min_weight": -0.3878360986709595,
+        "mean_weight": 7.136396561691072e-06,
+        "max_singular_value": 2.5147290229797363,
+        "min_singular_value_90": 0.3653887212276459,
+        "sum_singular_values_90": 441.6556813418865,
+        "num_rank_90": 487,
+        "rank90_ratio": 0.6341145833333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.012053812853991985,
+        "relative_p1_error": 53.28163725641466,
+        "p2_error": 11.660284996032715
+    },
+    "encoder.layer.3.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.6304351687431335,
+        "min_weight": -0.657655656337738,
+        "mean_weight": -7.169818127295002e-05,
+        "max_singular_value": 12.591856002807617,
+        "min_singular_value_90": 1.320160150527954,
+        "sum_singular_values_90": 1416.6104125976562,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.017188025638461113,
+        "relative_p1_error": 53.926609444166914,
+        "p2_error": 33.37215042114258
+    },
+    "encoder.layer.3.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 0.779172956943512,
+        "min_weight": -6.64035701751709,
+        "mean_weight": -3.598555122152902e-05,
+        "max_singular_value": 10.61676025390625,
+        "min_singular_value_90": 1.2917460203170776,
+        "sum_singular_values_90": 1389.4415596723557,
+        "num_rank_90": 629,
+        "rank90_ratio": 0.8190104166666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016878018155694008,
+        "relative_p1_error": 55.930140445724355,
+        "p2_error": 32.808292388916016
+    },
+    "encoder.layer.4.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.34996548295021057,
+        "min_weight": -0.3893369138240814,
+        "mean_weight": -0.0001231198839377612,
+        "max_singular_value": 4.964928150177002,
+        "min_singular_value_90": 0.5214091539382935,
+        "sum_singular_values_90": 626.9816656708717,
+        "num_rank_90": 479,
+        "rank90_ratio": 0.6236979166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016852473840117455,
+        "relative_p1_error": 50.59899920541321,
+        "p2_error": 16.29706573486328
+    },
+    "encoder.layer.4.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3910461366176605,
+        "min_weight": -0.3663024604320526,
+        "mean_weight": 1.2568348211061675e-05,
+        "max_singular_value": 5.534279823303223,
+        "min_singular_value_90": 0.5191996097564697,
+        "sum_singular_values_90": 621.0554936528206,
+        "num_rank_90": 479,
+        "rank90_ratio": 0.6236979166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016814865171909332,
+        "relative_p1_error": 50.78916241258159,
+        "p2_error": 16.24774932861328
+    },
+    "encoder.layer.4.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.20931585133075714,
+        "min_weight": -0.2089407742023468,
+        "mean_weight": 5.9832869737874717e-05,
+        "max_singular_value": 2.8861706256866455,
+        "min_singular_value_90": 0.4361626207828522,
+        "sum_singular_values_90": 527.153527289629,
+        "num_rank_90": 488,
+        "rank90_ratio": 0.6354166666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.0141607029363513,
+        "relative_p1_error": 51.53384032938949,
+        "p2_error": 13.684394836425781
+    },
+    "encoder.layer.4.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.23675276339054108,
+        "min_weight": -0.32894155383110046,
+        "mean_weight": 1.5333827832364477e-05,
+        "max_singular_value": 2.619537115097046,
+        "min_singular_value_90": 0.4232276380062103,
+        "sum_singular_values_90": 502.4877756536007,
+        "num_rank_90": 490,
+        "rank90_ratio": 0.6380208333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.014108285307884216,
+        "relative_p1_error": 55.63454198683544,
+        "p2_error": 13.670531272888184
+    },
+    "encoder.layer.4.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.8643911480903625,
+        "min_weight": -0.5355212688446045,
+        "mean_weight": 8.538366091670468e-05,
+        "max_singular_value": 12.523362159729004,
+        "min_singular_value_90": 1.338273286819458,
+        "sum_singular_values_90": 1435.2746933698654,
+        "num_rank_90": 627,
+        "rank90_ratio": 0.81640625,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.017505576834082603,
+        "relative_p1_error": 54.58992940312708,
+        "p2_error": 34.02088165283203
+    },
+    "encoder.layer.4.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 1.944901466369629,
+        "min_weight": -6.817561626434326,
+        "mean_weight": -1.6500955098308623e-05,
+        "max_singular_value": 9.496761322021484,
+        "min_singular_value_90": 1.2837247848510742,
+        "sum_singular_values_90": 1403.9106481075287,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016850246116518974,
+        "relative_p1_error": 55.09397832734753,
+        "p2_error": 32.828125
+    },
+    "encoder.layer.5.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3671417534351349,
+        "min_weight": -0.34015166759490967,
+        "mean_weight": -2.6862668164540082e-05,
+        "max_singular_value": 4.735846042633057,
+        "min_singular_value_90": 0.539914608001709,
+        "sum_singular_values_90": 644.9254924654961,
+        "num_rank_90": 475,
+        "rank90_ratio": 0.6184895833333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.017358817160129547,
+        "relative_p1_error": 50.5418551117188,
+        "p2_error": 16.785892486572266
+    },
+    "encoder.layer.5.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3594684600830078,
+        "min_weight": -0.3216269016265869,
+        "mean_weight": -5.903928104089573e-05,
+        "max_singular_value": 5.473158836364746,
+        "min_singular_value_90": 0.5356717705726624,
+        "sum_singular_values_90": 635.7212643027306,
+        "num_rank_90": 476,
+        "rank90_ratio": 0.6197916666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.017169786617159843,
+        "relative_p1_error": 50.08998087247593,
+        "p2_error": 16.586917877197266
+    },
+    "encoder.layer.5.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.21367095410823822,
+        "min_weight": -0.22094139456748962,
+        "mean_weight": -3.821548307314515e-05,
+        "max_singular_value": 2.8738865852355957,
+        "min_singular_value_90": 0.44055917859077454,
+        "sum_singular_values_90": 530.3887529373169,
+        "num_rank_90": 487,
+        "rank90_ratio": 0.6341145833333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.014445881359279156,
+        "relative_p1_error": 52.771277210665524,
+        "p2_error": 13.99477767944336
+    },
+    "encoder.layer.5.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3215669095516205,
+        "min_weight": -0.2976266145706177,
+        "mean_weight": 1.616618646949064e-05,
+        "max_singular_value": 2.515669822692871,
+        "min_singular_value_90": 0.43887075781822205,
+        "sum_singular_values_90": 515.3101855516434,
+        "num_rank_90": 489,
+        "rank90_ratio": 0.63671875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.014692912809550762,
+        "relative_p1_error": 56.81987455857293,
+        "p2_error": 14.235824584960938
+    },
+    "encoder.layer.5.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.5516349077224731,
+        "min_weight": -0.35396239161491394,
+        "mean_weight": 4.665643427870236e-05,
+        "max_singular_value": 12.070611953735352,
+        "min_singular_value_90": 1.3361990451812744,
+        "sum_singular_values_90": 1433.2503846883774,
+        "num_rank_90": 628,
+        "rank90_ratio": 0.8177083333333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.017500875517725945,
+        "relative_p1_error": 54.80385495966812,
+        "p2_error": 33.999481201171875
+    },
+    "encoder.layer.5.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 2.497267484664917,
+        "min_weight": -6.0234551429748535,
+        "mean_weight": 5.815174972667592e-06,
+        "max_singular_value": 8.479363441467285,
+        "min_singular_value_90": 1.2587131261825562,
+        "sum_singular_values_90": 1384.423119187355,
+        "num_rank_90": 626,
+        "rank90_ratio": 0.8151041666666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016524631530046463,
+        "relative_p1_error": 54.70600129235893,
+        "p2_error": 32.15610122680664
+    },
+    "encoder.layer.6.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3202749490737915,
+        "min_weight": -0.2717173397541046,
+        "mean_weight": 6.366466550389305e-05,
+        "max_singular_value": 4.453802108764648,
+        "min_singular_value_90": 0.5227842926979065,
+        "sum_singular_values_90": 631.8099309802055,
+        "num_rank_90": 474,
+        "rank90_ratio": 0.6171875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016647852957248688,
+        "relative_p1_error": 48.80418725304401,
+        "p2_error": 16.075746536254883
+    },
+    "encoder.layer.6.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.36005645990371704,
+        "min_weight": -0.3337151110172272,
+        "mean_weight": -5.165209586266428e-05,
+        "max_singular_value": 5.259000301361084,
+        "min_singular_value_90": 0.5177395939826965,
+        "sum_singular_values_90": 623.9284230470657,
+        "num_rank_90": 472,
+        "rank90_ratio": 0.6145833333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01646619662642479,
+        "relative_p1_error": 48.35797613604748,
+        "p2_error": 15.903586387634277
+    },
+    "encoder.layer.6.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.1851368546485901,
+        "min_weight": -0.19377253949642181,
+        "mean_weight": 2.35847219300922e-05,
+        "max_singular_value": 2.66791033744812,
+        "min_singular_value_90": 0.44536861777305603,
+        "sum_singular_values_90": 525.2617165148258,
+        "num_rank_90": 494,
+        "rank90_ratio": 0.6432291666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.014598237350583076,
+        "relative_p1_error": 54.66162476383517,
+        "p2_error": 14.11583137512207
+    },
+    "encoder.layer.6.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.20038966834545135,
+        "min_weight": -0.21602025628089905,
+        "mean_weight": -2.87688453681767e-06,
+        "max_singular_value": 2.4234535694122314,
+        "min_singular_value_90": 0.44246020913124084,
+        "sum_singular_values_90": 505.9621932506561,
+        "num_rank_90": 494,
+        "rank90_ratio": 0.6432291666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.014604061841964722,
+        "relative_p1_error": 58.08358232130576,
+        "p2_error": 14.183180809020996
+    },
+    "encoder.layer.6.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.3509213924407959,
+        "min_weight": -0.2982273995876312,
+        "mean_weight": -3.4460181268514134e-06,
+        "max_singular_value": 11.99095344543457,
+        "min_singular_value_90": 1.3559268712997437,
+        "sum_singular_values_90": 1442.795608639717,
+        "num_rank_90": 629,
+        "rank90_ratio": 0.8190104166666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.017701804637908936,
+        "relative_p1_error": 55.075731286355115,
+        "p2_error": 34.37605285644531
+    },
+    "encoder.layer.6.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 1.6329282522201538,
+        "min_weight": -4.809151649475098,
+        "mean_weight": 1.548233922221698e-05,
+        "max_singular_value": 7.525730133056641,
+        "min_singular_value_90": 1.2203807830810547,
+        "sum_singular_values_90": 1359.8217729330063,
+        "num_rank_90": 623,
+        "rank90_ratio": 0.8111979166666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.01604260690510273,
+        "relative_p1_error": 53.49253174780429,
+        "p2_error": 31.173866271972656
+    },
+    "encoder.layer.7.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3302304744720459,
+        "min_weight": -0.26866596937179565,
+        "mean_weight": -5.805635282740695e-06,
+        "max_singular_value": 4.745452880859375,
+        "min_singular_value_90": 0.5096592903137207,
+        "sum_singular_values_90": 625.280759871006,
+        "num_rank_90": 468,
+        "rank90_ratio": 0.609375,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016071436926722527,
+        "relative_p1_error": 46.71830524534687,
+        "p2_error": 15.52473258972168
+    },
+    "encoder.layer.7.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.434326171875,
+        "min_weight": -0.3854716718196869,
+        "mean_weight": -1.1958013601542916e-05,
+        "max_singular_value": 5.198153972625732,
+        "min_singular_value_90": 0.5054347515106201,
+        "sum_singular_values_90": 618.5679939985275,
+        "num_rank_90": 468,
+        "rank90_ratio": 0.609375,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015910359099507332,
+        "relative_p1_error": 46.15314498409134,
+        "p2_error": 15.354464530944824
+    },
+    "encoder.layer.7.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.1688738614320755,
+        "min_weight": -0.19491936266422272,
+        "mean_weight": 9.529309318168089e-05,
+        "max_singular_value": 2.2786710262298584,
+        "min_singular_value_90": 0.4485491216182709,
+        "sum_singular_values_90": 519.8051635622978,
+        "num_rank_90": 498,
+        "rank90_ratio": 0.6484375,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015158876776695251,
+        "relative_p1_error": 58.40540211000814,
+        "p2_error": 14.690923690795898
+    },
+    "encoder.layer.7.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.2465004026889801,
+        "min_weight": -0.24495190382003784,
+        "mean_weight": -1.4654674487246666e-05,
+        "max_singular_value": 2.0816030502319336,
+        "min_singular_value_90": 0.46090444922447205,
+        "sum_singular_values_90": 510.32118332386017,
+        "num_rank_90": 502,
+        "rank90_ratio": 0.6536458333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015483587980270386,
+        "relative_p1_error": 62.257485895487676,
+        "p2_error": 15.030406951904297
+    },
+    "encoder.layer.7.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.3975801467895508,
+        "min_weight": -0.31864169239997864,
+        "mean_weight": 0.00031754825613461435,
+        "max_singular_value": 11.696796417236328,
+        "min_singular_value_90": 1.2974904775619507,
+        "sum_singular_values_90": 1380.0695939064026,
+        "num_rank_90": 625,
+        "rank90_ratio": 0.8138020833333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016915759071707726,
+        "relative_p1_error": 54.65753498858289,
+        "p2_error": 32.812591552734375
+    },
+    "encoder.layer.7.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 0.9513964056968689,
+        "min_weight": -3.561988353729248,
+        "mean_weight": 5.447800504043698e-07,
+        "max_singular_value": 6.708874225616455,
+        "min_singular_value_90": 1.2634483575820923,
+        "sum_singular_values_90": 1338.8722133636475,
+        "num_rank_90": 628,
+        "rank90_ratio": 0.8177083333333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.01646522246301174,
+        "relative_p1_error": 56.3626083080421,
+        "p2_error": 31.96765899658203
+    },
+    "encoder.layer.8.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.35009923577308655,
+        "min_weight": -0.3796270489692688,
+        "mean_weight": 0.00012105637142667547,
+        "max_singular_value": 4.367897033691406,
+        "min_singular_value_90": 0.5314152240753174,
+        "sum_singular_values_90": 647.999858379364,
+        "num_rank_90": 473,
+        "rank90_ratio": 0.6158854166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01709173433482647,
+        "relative_p1_error": 48.92466095242563,
+        "p2_error": 16.480979919433594
+    },
+    "encoder.layer.8.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.38411179184913635,
+        "min_weight": -0.40166378021240234,
+        "mean_weight": -4.26902188337408e-05,
+        "max_singular_value": 5.187079429626465,
+        "min_singular_value_90": 0.5287402868270874,
+        "sum_singular_values_90": 642.6654203534126,
+        "num_rank_90": 474,
+        "rank90_ratio": 0.6171875,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01685844548046589,
+        "relative_p1_error": 48.194820664730884,
+        "p2_error": 16.26358985900879
+    },
+    "encoder.layer.8.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.17780016362667084,
+        "min_weight": -0.1871761828660965,
+        "mean_weight": 9.540923201711848e-06,
+        "max_singular_value": 2.5906543731689453,
+        "min_singular_value_90": 0.4610363245010376,
+        "sum_singular_values_90": 548.1864489018917,
+        "num_rank_90": 495,
+        "rank90_ratio": 0.64453125,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015356902964413166,
+        "relative_p1_error": 54.82075664274938,
+        "p2_error": 14.822118759155273
+    },
+    "encoder.layer.8.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.41073885560035706,
+        "min_weight": -0.5421141982078552,
+        "mean_weight": -1.689105488367204e-06,
+        "max_singular_value": 2.950457811355591,
+        "min_singular_value_90": 0.46175605058670044,
+        "sum_singular_values_90": 528.3188430666924,
+        "num_rank_90": 501,
+        "rank90_ratio": 0.65234375,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015182103030383587,
+        "relative_p1_error": 57.448302494369926,
+        "p2_error": 14.718609809875488
+    },
+    "encoder.layer.8.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.37640872597694397,
+        "min_weight": -0.43370410799980164,
+        "mean_weight": 0.00039120251312851906,
+        "max_singular_value": 11.76274585723877,
+        "min_singular_value_90": 1.2888367176055908,
+        "sum_singular_values_90": 1376.3413808345795,
+        "num_rank_90": 625,
+        "rank90_ratio": 0.8138020833333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016863206401467323,
+        "relative_p1_error": 54.465897168104114,
+        "p2_error": 32.64179992675781
+    },
+    "encoder.layer.8.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 1.1222258806228638,
+        "min_weight": -3.1352038383483887,
+        "mean_weight": -3.67378476084923e-07,
+        "max_singular_value": 7.925690174102783,
+        "min_singular_value_90": 1.2972252368927002,
+        "sum_singular_values_90": 1346.6379672288895,
+        "num_rank_90": 633,
+        "rank90_ratio": 0.82421875,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.01696893945336342,
+        "relative_p1_error": 58.09660262165628,
+        "p2_error": 32.902584075927734
+    },
+    "encoder.layer.9.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.26922428607940674,
+        "min_weight": -0.24494677782058716,
+        "mean_weight": -0.00012025097385048866,
+        "max_singular_value": 4.561459541320801,
+        "min_singular_value_90": 0.5752512216567993,
+        "sum_singular_values_90": 691.222601890564,
+        "num_rank_90": 484,
+        "rank90_ratio": 0.6302083333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018803685903549194,
+        "relative_p1_error": 51.476609421663525,
+        "p2_error": 18.140676498413086
+    },
+    "encoder.layer.9.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.6269592046737671,
+        "min_weight": -0.5265079140663147,
+        "mean_weight": 1.948565841303207e-05,
+        "max_singular_value": 5.280603885650635,
+        "min_singular_value_90": 0.5759061574935913,
+        "sum_singular_values_90": 686.8095102310181,
+        "num_rank_90": 483,
+        "rank90_ratio": 0.62890625,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018619375303387642,
+        "relative_p1_error": 51.140241772449535,
+        "p2_error": 17.97905731201172
+    },
+    "encoder.layer.9.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.2093314826488495,
+        "min_weight": -0.1981411725282669,
+        "mean_weight": 2.8407737772795372e-05,
+        "max_singular_value": 2.2887191772460938,
+        "min_singular_value_90": 0.47418197989463806,
+        "sum_singular_values_90": 548.0504147410393,
+        "num_rank_90": 502,
+        "rank90_ratio": 0.6536458333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01606428623199463,
+        "relative_p1_error": 58.73719813192177,
+        "p2_error": 15.511470794677734
+    },
+    "encoder.layer.9.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.35814473032951355,
+        "min_weight": -0.3736896216869354,
+        "mean_weight": 1.0377043508924544e-05,
+        "max_singular_value": 2.7088489532470703,
+        "min_singular_value_90": 0.47139284014701843,
+        "sum_singular_values_90": 527.438273191452,
+        "num_rank_90": 511,
+        "rank90_ratio": 0.6653645833333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.015776501968503,
+        "relative_p1_error": 60.896127930150904,
+        "p2_error": 15.262821197509766
+    },
+    "encoder.layer.9.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.7370226383209229,
+        "min_weight": -0.822796106338501,
+        "mean_weight": 0.00046331912744790316,
+        "max_singular_value": 13.617839813232422,
+        "min_singular_value_90": 1.276077389717102,
+        "sum_singular_values_90": 1382.798172712326,
+        "num_rank_90": 623,
+        "rank90_ratio": 0.8111979166666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016726026311516762,
+        "relative_p1_error": 53.53939654905654,
+        "p2_error": 32.35639190673828
+    },
+    "encoder.layer.9.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 2.186894416809082,
+        "min_weight": -3.0745725631713867,
+        "mean_weight": -1.0400964129075874e-05,
+        "max_singular_value": 10.631287574768066,
+        "min_singular_value_90": 1.3783526420593262,
+        "sum_singular_values_90": 1410.3860996961594,
+        "num_rank_90": 637,
+        "rank90_ratio": 0.8294270833333334,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.018085232004523277,
+        "relative_p1_error": 59.79477927329535,
+        "p2_error": 35.028160095214844
+    },
+    "encoder.layer.10.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.4638705849647522,
+        "min_weight": -0.4196734130382538,
+        "mean_weight": 0.00015207489195745438,
+        "max_singular_value": 5.710827827453613,
+        "min_singular_value_90": 0.5714724659919739,
+        "sum_singular_values_90": 694.0347905755043,
+        "num_rank_90": 485,
+        "rank90_ratio": 0.6315104166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018961574882268906,
+        "relative_p1_error": 51.99980180662456,
+        "p2_error": 18.298267364501953
+    },
+    "encoder.layer.10.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.26120737195014954,
+        "min_weight": -0.3220859467983246,
+        "mean_weight": -1.8148459275835194e-05,
+        "max_singular_value": 5.163385391235352,
+        "min_singular_value_90": 0.5740916132926941,
+        "sum_singular_values_90": 692.3998140692711,
+        "num_rank_90": 485,
+        "rank90_ratio": 0.6315104166666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018952226266264915,
+        "relative_p1_error": 52.2030683087649,
+        "p2_error": 18.29620361328125
+    },
+    "encoder.layer.10.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.2529148757457733,
+        "min_weight": -0.2470024675130844,
+        "mean_weight": -3.974512583226897e-05,
+        "max_singular_value": 2.75454044342041,
+        "min_singular_value_90": 0.474345326423645,
+        "sum_singular_values_90": 560.7679488062859,
+        "num_rank_90": 496,
+        "rank90_ratio": 0.6458333333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.016262756660580635,
+        "relative_p1_error": 58.38323201136664,
+        "p2_error": 15.728979110717773
+    },
+    "encoder.layer.10.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.285733699798584,
+        "min_weight": -0.2611401379108429,
+        "mean_weight": 6.590792054339545e-06,
+        "max_singular_value": 2.3109281063079834,
+        "min_singular_value_90": 0.46025118231773376,
+        "sum_singular_values_90": 531.1780714988708,
+        "num_rank_90": 501,
+        "rank90_ratio": 0.65234375,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01566687598824501,
+        "relative_p1_error": 59.57990911309975,
+        "p2_error": 15.149147033691406
+    },
+    "encoder.layer.10.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 1.6365556716918945,
+        "min_weight": -1.6418862342834473,
+        "mean_weight": 3.727222792804241e-05,
+        "max_singular_value": 11.293309211730957,
+        "min_singular_value_90": 1.2535414695739746,
+        "sum_singular_values_90": 1364.7528412342072,
+        "num_rank_90": 621,
+        "rank90_ratio": 0.80859375,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.016495704650878906,
+        "relative_p1_error": 53.3512679690242,
+        "p2_error": 31.882205963134766
+    },
+    "encoder.layer.10.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 0.9037580490112305,
+        "min_weight": -6.373070240020752,
+        "mean_weight": -7.990726771822665e-06,
+        "max_singular_value": 9.049972534179688,
+        "min_singular_value_90": 1.3388530015945435,
+        "sum_singular_values_90": 1374.7913081645966,
+        "num_rank_90": 635,
+        "rank90_ratio": 0.8268229166666666,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.01766268163919449,
+        "relative_p1_error": 59.407079434786425,
+        "p2_error": 34.138916015625
+    },
+    "encoder.layer.11.attention.self.query.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.6601176261901855,
+        "min_weight": -0.7210237979888916,
+        "mean_weight": -0.0001434818987036124,
+        "max_singular_value": 7.126557350158691,
+        "min_singular_value_90": 0.568706750869751,
+        "sum_singular_values_90": 677.2152508497238,
+        "num_rank_90": 486,
+        "rank90_ratio": 0.6328125,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018451949581503868,
+        "relative_p1_error": 51.346690788719386,
+        "p2_error": 17.81405258178711
+    },
+    "encoder.layer.11.attention.self.key.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.3146648108959198,
+        "min_weight": -0.4733372628688812,
+        "mean_weight": 0.0002499343827366829,
+        "max_singular_value": 5.066803932189941,
+        "min_singular_value_90": 0.5592285990715027,
+        "sum_singular_values_90": 672.0424829721451,
+        "num_rank_90": 488,
+        "rank90_ratio": 0.6354166666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.018386423587799072,
+        "relative_p1_error": 52.00459105019167,
+        "p2_error": 17.73382568359375
+    },
+    "encoder.layer.11.attention.self.value.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.2811879813671112,
+        "min_weight": -0.26224076747894287,
+        "mean_weight": -2.2046779122320004e-05,
+        "max_singular_value": 2.7656052112579346,
+        "min_singular_value_90": 0.5244497060775757,
+        "sum_singular_values_90": 613.3957045674324,
+        "num_rank_90": 494,
+        "rank90_ratio": 0.6432291666666666,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.017497219145298004,
+        "relative_p1_error": 56.471413450548226,
+        "p2_error": 16.90475845336914
+    },
+    "encoder.layer.11.attention.output.dense.weight": {
+        "size": [
+            768,
+            768
+        ],
+        "max_weight": 0.19967034459114075,
+        "min_weight": -0.3128300905227661,
+        "mean_weight": -3.3344470011797966e-06,
+        "max_singular_value": 2.7936394214630127,
+        "min_singular_value_90": 0.5083497762680054,
+        "sum_singular_values_90": 584.7158119678497,
+        "num_rank_90": 502,
+        "rank90_ratio": 0.6536458333333334,
+        "compression_factor": 0.5,
+        "top_r": 192,
+        "avg_p1_error": 0.01711411029100418,
+        "relative_p1_error": 58.56532586123154,
+        "p2_error": 16.534317016601562
+    },
+    "encoder.layer.11.intermediate.dense.weight": {
+        "size": [
+            3072,
+            768
+        ],
+        "max_weight": 0.2824043929576874,
+        "min_weight": -0.4475419521331787,
+        "mean_weight": 0.00042076068348251283,
+        "max_singular_value": 9.314970970153809,
+        "min_singular_value_90": 1.3203306198120117,
+        "sum_singular_values_90": 1392.9183801412582,
+        "num_rank_90": 624,
+        "rank90_ratio": 0.8125,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.017280705273151398,
+        "relative_p1_error": 55.39188072453174,
+        "p2_error": 33.363311767578125
+    },
+    "encoder.layer.11.output.dense.weight": {
+        "size": [
+            768,
+            3072
+        ],
+        "max_weight": 0.9530386924743652,
+        "min_weight": -2.148390054702759,
+        "mean_weight": -6.743969606759492e-06,
+        "max_singular_value": 5.636325836181641,
+        "min_singular_value_90": 1.2786338329315186,
+        "sum_singular_values_90": 1246.643384695053,
+        "num_rank_90": 573,
+        "rank90_ratio": 0.74609375,
+        "compression_factor": 0.5,
+        "top_r": 307,
+        "avg_p1_error": 0.015350120142102242,
+        "relative_p1_error": 54.11103690015191,
+        "p2_error": 29.63199806213379
+    }
+}
