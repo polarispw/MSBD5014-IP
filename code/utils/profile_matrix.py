@@ -1,36 +1,45 @@
 import os
 import json
 import torch
+from accelerate.utils import check_device_map
 from tqdm import tqdm
-from torch import nn
 from transformers import AutoModel, AutoConfig
 from accelerate import init_empty_weights, infer_auto_device_map
 
 
-def profile_llama():
-    model_name = "meta-llama/Llama-2-7b-hf"
-    model_config = AutoConfig.from_pretrained(model_name, cache_dir=".cache")
-    with init_empty_weights():
-        model = AutoModel.from_config(model_config)
-
-    device_map = infer_auto_device_map(model, no_split_module_classes=["LlamaDecoderLayer"],)
+def generate_device_map(model, model_config, start_layer=0, no_split_module_classes=None):
+    if no_split_module_classes is None:
+        no_split_module_classes = ["LlamaDecoderLayer"]
+    device_map = infer_auto_device_map(model, no_split_module_classes=no_split_module_classes)
     my_device_map = device_map
-
+    print(my_device_map)
     my_device_map["embed_tokens"] = "cpu"
     my_device_map["norm"] = "cpu"
-
-    start = 7   # from 0 to 7
+    my_device_map["lm_head"] = "disk"
+    start = start_layer  # from 0 to 7
     gpu_layers = range(start * 4, start * 4 + 4)
     for i in range(model_config.num_hidden_layers):
         if i in gpu_layers:
             my_device_map[f"layers.{i}"] = 0
         elif my_device_map[f"layers.{i}"] == 0:
             my_device_map[f"layers.{i}"] = "cpu"
+    check_device_map(model, my_device_map)
+    return my_device_map
+
+
+def profile_llama(start=0):
+    model_name = "meta-llama/Llama-2-7b-hf"
+    model_config = AutoConfig.from_pretrained(model_name, cache_dir="../.cache")
+    with init_empty_weights():
+        model = AutoModel.from_config(model_config)
+
+    # generate device map
+    my_device_map = generate_device_map(model, model_config, no_split_module_classes=["LlamaDecoderLayer"])
     print(my_device_map)
 
     # load
     model = AutoModel.from_pretrained(model_name,
-                                      cache_dir=".cache",
+                                      cache_dir="../.cache",
                                       device_map=my_device_map,
                                       # device_map=device_map,
                                       )
@@ -84,7 +93,7 @@ def profile_llama():
                                   }
 
     # save profiles as json files in the folder "matrix_profiles"
-    save_dir = os.path.join("matrix_profiles", model_name.split("/")[-1] + f"-{compress_factor}")
+    save_dir = os.path.join("../matrix_profiles", model_name.split("/")[-1] + f"-{compress_factor}")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     save_file = os.path.join(save_dir, f"{model_name.split('/')[-1]}_{start}_{compress_factor}.json")
@@ -95,7 +104,7 @@ def profile_llama():
 
 def profile_bert():
     model_name = "bert-base-uncased"
-    model = AutoModel.from_pretrained(model_name, cache_dir=".cache")
+    model = AutoModel.from_pretrained(model_name, cache_dir="../.cache")
     model.to("cuda:0")
 
     matrix_dics = {}
@@ -144,28 +153,13 @@ def profile_bert():
                                   }
 
     # save profiles as json files in the folder "matrix_profiles"
-    save_dir = os.path.join("matrix_profiles", model_name.split("/")[-1] + f"-{compress_factor}")
+    save_dir = os.path.join("../matrix_profiles", model_name.split("/")[-1] + f"-{compress_factor}")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     save_file = os.path.join(save_dir, f"{model_name.split('/')[-1]}_{compress_factor}.json")
     with open(save_file, "w") as f:
         json.dump(matrix_profiles, f, indent=4)
     print(f"matrix profiles saved in {save_file}")
-
-
-def compare_mlp():
-    from modeling_llama import LlamaMLP
-
-    hidden_size = 1024
-    intermediate_size = 4096
-    gate_layer = nn.Linear(hidden_size, intermediate_size, bias=False)
-    up_layer = nn.Linear(hidden_size, intermediate_size, bias=False)
-    down_layer = nn.Linear(intermediate_size, hidden_size, bias=False)
-    act_layer = nn.SiLU()
-
-    input_feature = torch.randn(1, 10, hidden_size)
-    gate_feature = gate_layer(input_feature)
-    act_feature = act_layer(gate_feature)
 
 
 if __name__ == "__main__":
