@@ -1,9 +1,8 @@
 accelerate==0.24.0
 datasets==2.14.6
 matplotlib==3.7.3
-numpy==1.24.3
 numpy==1.24.4
 pandas==2.0.3
-torch==2.1.0+cu121
+torch==2.1.0
 tqdm==4.66.1
 transformers==4.34.1
