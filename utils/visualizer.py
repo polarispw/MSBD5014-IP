@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt, colors
 
 class ProfileVisualizer:
     def __init__(self, **kwargs):
-        self.save_dir = kwargs.pop("save_dir", "../.profiles/pics")
+        self.save_dir = kwargs.pop("save_dir", ".profiles/pics")
         if os.path.exists(self.save_dir):
             pass
         else:
@@ -118,13 +118,12 @@ class ProfileVisualizer:
 
     def grad_plot(self, profiles, show: bool = True, save: bool = False):
         # plot the gradient matrices
-        for name, profile in profiles.items():
+        for name, profile in tqdm(profiles.items()):
             data = profile["grad_val"]
-            aspect_ratio = data.shape[0] / data.shape[1]
             fig, axs = plt.subplots(2, 1, figsize=(10, 16), dpi=300)
             fig.suptitle(name, fontsize=28)
 
-            heat_map = axs[0].imshow(data[:, :data.shape[0]], aspect=aspect_ratio)
+            heat_map = axs[0].imshow(data[:, :data.shape[0]], aspect="auto")
             axs[0].set_title("grad_val_matrix")
 
             violinplot = axs[1].violinplot(data.flatten(), quantiles=[[0.95, 0.99]], showmeans=True)

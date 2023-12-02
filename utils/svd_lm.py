@@ -131,7 +131,7 @@ class AutoSVDHandler:
         # register hooks
         if target_mats is None:
             for name, param in self.model.named_parameters():
-                if "weight" in name and "embed" not in name and "layer_norm" not in name:
+                if "weight" in name and "proj"in name:
                     h = param.register_hook(self._get_grad(name))
                     self.weight_hooks.append(h)
         else:
@@ -147,13 +147,13 @@ class AutoSVDHandler:
         for h in self.weight_hooks:
             h.remove()
 
-    def _get_grad(self, name):
+    def _get_grad(self, name, downsample=16):
         """
         get the gradient of the weight matrix.
         """
 
         def hook(grad):
-            grad = grad.detach().cpu().numpy()
+            grad = torch.max_pool1d(grad, kernel_size=downsample, stride=downsample).detach().cpu().numpy()
             if name not in self.grad_maps:
                 self.grad_maps[name] = []
             self.grad_maps[name].append(grad)
@@ -167,7 +167,7 @@ class AutoSVDHandler:
         grad_profiles = {}
         for name, grad_map in tqdm(self.grad_maps.items(), desc="Processing gradients"):
             # grad_map is in shape of weight matrices
-            grad_profiles[name] = {"grad_val": grad_map if return_grad_val else None,
+            grad_profiles[name] = {"grad_val": np.mean(grad_map, axis=0) if return_grad_val else None,
                                    "grad_mean": np.mean(grad_map),
                                    "grad_std": np.std(grad_map),
                                    "grad_max": np.max(grad_map),
