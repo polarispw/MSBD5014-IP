@@ -16,6 +16,9 @@ def calc_rank(
     if compress_ratio < 0 or compress_ratio > 1:
         raise ValueError(f"compress_ratio {compress_ratio} should be in [0, 1].")
 
+    if compress_ratio == 1.0:
+        return min(A.shape)
+
     # compress_ratio = (m + n) * r / (m * n)
     m = A.shape[0]
     n = A.shape[1]
@@ -60,7 +63,8 @@ def svd_decomposition(
     if randomized is False:
         U, S, VT = torch.linalg.svd(A, full_matrices=False)
     elif randomized is True:
-        U, S, V = torch.svd_lowrank(A, num_ranks + num_oversampling)
+        num_ranks = min(num_ranks + num_oversampling, min(A.shape))
+        U, S, V = torch.svd_lowrank(A, num_ranks)
         # https://pytorch.org/docs/stable/_modules/torch/_lowrank.html#svd_lowrank
         VT = V.mH
     else:
@@ -80,7 +84,7 @@ def weighted_svd_decomposition(
     heuristic: Optional[str],
     num_ranks: int,
     randomized: bool = True,
-    num_oversampling: int = 5,
+    num_oversampling: int = 10,
     normalize: bool = False,
     reduce_before_sqrt: bool = True,  # seems to be better empirically
 ) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -91,6 +95,8 @@ def weighted_svd_decomposition(
     if A.dtype != W.dtype:
         A = A.float()
         W = W.float()
+    if A.device != W.device:
+        W = W.to(A.device)
 
     if heuristic is None:
         heuristic = "two-sided"
@@ -124,7 +130,8 @@ def weighted_svd_decomposition(
         A_tilde,
         randomized=randomized,
         num_ranks=num_ranks,
-        num_oversampling=num_oversampling)
+        num_oversampling=num_oversampling
+    )
 
     if heuristic == "none":
         L1 = L1_tilde

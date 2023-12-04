@@ -1,5 +1,5 @@
 """
-specialized trainer for running importance collection
+Specialized trainer for running importance collection
 """
 from typing import Dict, Union, Any, List
 
@@ -8,6 +8,15 @@ from torch import nn
 from transformers import Trainer
 from transformers.trainer_utils import ShardedDDPOption
 from transformers.utils import is_sagemaker_mp_enabled
+
+
+def clamp_to_fp16_range(tensor):
+    """
+    Clamp the values of a tensor to the representable range of fp16.
+    """
+    min_val = torch.tensor(5.97e-08).to(tensor.device)
+    max_val = torch.tensor(65500).to(tensor.device)
+    return torch.clamp(tensor, min=min_val, max=max_val)
 
 
 class NoOptimizerTrainer(Trainer):
@@ -21,17 +30,17 @@ class NoOptimizerTrainer(Trainer):
 
     def create_optimizer(self):
         """
-        Setup the optimizer.
-
-        We provide a reasonable default that works well. If you want to use something else, you can pass a tuple in the
-        Trainer's init through `optimizers`, or subclass and override this method in a subclass.
+        It is hard to reload the _inner_training_loop to disable the optimizer.
+        So we use a dummy optimizer with no params inside to replace the original one.
         """
         opt_model = self.model_wrapped if is_sagemaker_mp_enabled() else self.model
-
+        flag = torch.zeros(1).to(opt_model.device)
+        flag.requires_grad = True
+        flag.grad = torch.zeros(1).to(flag.device)
         if self.optimizer is None:
             optimizer_grouped_parameters = [
                 {
-                    "params": [torch.zeros(1)],
+                    "params": [flag],
                     "weight_decay": self.args.weight_decay,
                 }]
             optimizer_cls, optimizer_kwargs = Trainer.get_optimizer_cls_and_kwargs(self.args)
@@ -50,9 +59,9 @@ class NoOptimizerTrainer(Trainer):
 
     def training_step(self, model: nn.Module, inputs: Dict[str, Union[torch.Tensor, Any]]) -> torch.Tensor:
         """
-        Perform a training step on a batch of inputs.
-
-        Subclass and override to inject custom behavior.
+        Add collection part after the original training step.
+        Note that gradients on well-trained model are very small, while some are salient.
+        So we use the abs instead of sqr and be careful with the overflow when using fp16.
 
         Args:
             model (`nn.Module`):
@@ -67,23 +76,27 @@ class NoOptimizerTrainer(Trainer):
             `torch.Tensor`: The tensor with training loss on this batch.
         """
         loss = Trainer.training_step(self, model, inputs)
+
         for name, param in model.named_parameters():
             if any([target in name for target in self.target_params]):
-                p = param.grad.detach().half() if self.save_half else param.grad.detach()
+                w = param.grad.detach().abs()
+                if self.save_half:
+                    w = clamp_to_fp16_range(w)
+                    w = w.half()
                 if self.offload_cpu:
-                    p = p.cpu()
+                    w = w.cpu()
 
                 name = name.split(".")
                 name = ".".join(name[1:-1])
 
                 if name not in self.ipt_dict:
-                    self.ipt_dict[name] = p
+                    self.ipt_dict[name] = w
                 else:
-                    self.ipt_dict[name] += p
+                    self.ipt_dict[name] = (self.ipt_dict[name]*self.counter + w)/(self.counter+1)
+
         self.counter += 1
+        torch.cuda.empty_cache()
         return loss
 
     def get_ipt_dict(self):
-        for k, v in self.ipt_dict.items():
-            self.ipt_dict[k] = v / self.counter
         return self.ipt_dict

@@ -1,6 +1,7 @@
 """
 replace the linear module with the svd module
 """
+import sys
 from typing import List, Dict
 
 import torch
@@ -37,6 +38,7 @@ def replace_linear_with_svd(
         compress_ratio: float,
         target_module: List[str],
         importance_dict: Dict[str, torch.Tensor] = None,
+        memory_efficient: bool = True,
         print_info: bool = False,
 ):
     """
@@ -52,37 +54,46 @@ def replace_linear_with_svd(
             cur_mod = getattr(cur_mod, block)
         setattr(cur_mod, name.split(".")[-1], new_module)
 
-    # the length is uncertain, so the bar doesn't show
-    for name, module in tqdm(base_model.named_modules(), desc="Replacing linear with SVD"):
+    modules_to_substitute = []
+    for name, module in base_model.named_modules():
         if any([target in name for target in target_module]):
+            modules_to_substitute.append((name, module))
 
-            num_ranks = calc_rank(module.weight.data, compress_ratio)
+    for name, module in tqdm(modules_to_substitute, desc="Replacing linear with SVD"):
+        A = module.weight.data.T
+        num_ranks = calc_rank(A, compress_ratio)
 
-            if importance_dict is not None and name in importance_dict:
-                L1, L2 = weighted_svd_decomposition(
-                    module.weight.data.T,
-                    importance_dict[name].T,
-                    heuristic="two-sided",
-                    num_ranks=num_ranks,
-                    randomized=True,
-                    num_oversampling=10,
-                    normalize=False,
-                    reduce_before_sqrt=True
-                )
-            else:
-                L1, L2 = svd_decomposition(
-                    module.weight.data.T,
-                    randomized=True,
-                    num_ranks=num_ranks,
-                    num_oversampling=10,
-                )
+        if importance_dict is not None and name in importance_dict:
+            W = importance_dict[name].T
+            L1, L2 = weighted_svd_decomposition(
+                A,
+                W,
+                heuristic="two-sided",
+                num_ranks=num_ranks,
+                randomized=True,
+                num_oversampling=10,
+                normalize=False,
+                reduce_before_sqrt=True
+            )
+        else:
+            L1, L2 = svd_decomposition(
+                A,
+                randomized=True,
+                num_ranks=num_ranks,
+                num_oversampling=10,
+            )
 
-            if print_info:
-                info.append(f"{name}: {module.weight.data.T.shape} -> {L1.shape} * {L2.shape}, "
-                            f"error: {calc_error(module.weight.data.T, L1, L2):.4f}")
+        new_module = SVDLinear(L1, L2, bias=False, svd_init=True)
+        if A.dtype == torch.float16:
+            new_module = new_module.half()
+        _set_module(base_model, name, new_module)
 
-            new_module = SVDLinear(L1, L2, bias=False, svd_init=True)
-            _set_module(base_model, name, new_module)
+        # clear the original weight to save memory
+        if memory_efficient:
+            module.weight.data = torch.tensor([]).to(module.weight.device)
+
+        if print_info:
+            info.append(f"{name}: {A.shape} -> {L1.shape} * {L2.shape}, error: {calc_error(A, L1, L2):.4f}")
 
     if print_info:
         print("\n".join(info))
@@ -100,10 +111,10 @@ if __name__ == "__main__":
     config.update({"num_hidden_layers": 2})
     model = AutoModel.from_pretrained(model_name, config=config, cache_dir="../.cache").to("cuda:0")
 
-    ipt_dic = {}
+    iportance_dict = {}
     for n, p in model.named_parameters():
         if any([target in n for target in TARGET_MODULES]):
-            ipt_dic[n] = torch.randint_like(p, 0, 2).float().to("cuda:0")
+            iportance_dict[n] = torch.randint_like(p, 0, 2).float().to("cuda:0")
 
-    replace_linear_with_svd(model, 0.1, TARGET_MODULES, importance_dict=ipt_dic, print_info=True)
+    replace_linear_with_svd(model, 0.1, TARGET_MODULES, importance_dict=iportance_dict, print_info=True)
     print(model)

@@ -17,6 +17,7 @@ from .weightcollecter import (
 )
 
 from .mytrainer import (
+    clamp_to_fp16_range,
     NoOptimizerTrainer,
 )
 
