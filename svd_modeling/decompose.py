@@ -98,6 +98,8 @@ def weighted_svd_decomposition(
     if A.device != W.device:
         W = W.to(A.device)
 
+    W = torch.clamp(W, min=5.97e-08)  # avoid zero division in line 140+
+
     if heuristic is None:
         heuristic = "two-sided"
 

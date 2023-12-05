@@ -4,10 +4,13 @@ Specialized trainer for running importance collection
 from typing import Dict, Union, Any, List
 
 import torch
+from peft import PeftModel
 from torch import nn
 from transformers import Trainer
+from transformers.modeling_utils import unwrap_model
+from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING_NAMES
 from transformers.trainer_utils import ShardedDDPOption
-from transformers.utils import is_sagemaker_mp_enabled
+from transformers.utils import is_sagemaker_mp_enabled, is_peft_available
 
 
 def clamp_to_fp16_range(tensor):

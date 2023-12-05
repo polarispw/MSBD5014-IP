@@ -1,5 +1,6 @@
 from .modeling import (
     replace_linear_with_svd,
+    svd_approximation,
 )
 
 from .decompose import (

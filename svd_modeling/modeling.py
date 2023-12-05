@@ -101,6 +101,60 @@ def replace_linear_with_svd(
     return base_model
 
 
+def svd_approximation(
+        base_model,
+        compress_ratio: float,
+        target_module: List[str],
+        importance_dict: Dict[str, torch.Tensor] = None,
+        print_info: bool = False,
+):
+    """
+    Do SVD approximation on the weight of linear module
+    """
+    info = []
+
+    modules_to_process = []
+    for name, module in base_model.named_modules():
+        if any([target in name for target in target_module]):
+            modules_to_process.append((name, module))
+
+    for name, module in tqdm(modules_to_process, desc="Conducting SVD approximation"):
+        A = module.weight.data.T
+        num_ranks = calc_rank(A, compress_ratio)
+
+        if importance_dict is not None and name in importance_dict:
+            W = importance_dict[name].T
+            L1, L2 = weighted_svd_decomposition(
+                A,
+                W,
+                heuristic="two-sided",
+                num_ranks=num_ranks,
+                randomized=True,
+                num_oversampling=10,
+                normalize=False,
+                reduce_before_sqrt=True
+            )
+        else:
+            L1, L2 = svd_decomposition(
+                A,
+                randomized=True,
+                num_ranks=num_ranks,
+                num_oversampling=10,
+            )
+        new_A = L1 @ L2
+        if A.dtype == torch.float16:
+            new_A = new_A.half()
+        module.weight.data = new_A.T
+
+        if print_info:
+            info.append(f"{name}: {A.shape} -> {L1.shape} @ {L2.shape}, error: {calc_error(A, L1, L2):.4f}")
+
+    if print_info:
+        print("\n".join(info))
+
+    return base_model
+
+
 if __name__ == "__main__":
     # test
     from transformers import AutoModel, AutoConfig
