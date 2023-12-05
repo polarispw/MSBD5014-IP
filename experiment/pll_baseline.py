@@ -228,7 +228,7 @@ def test_fwsvd(
 
 if __name__ == "__main__":
     model_name = "princeton-nlp/Sheared-LLaMA-1.3B"
-    data_dir = "../data"
+    data_dir = "../.data"
     test_vanilla(model_name, "../.cache", data_dir=data_dir, half_model=True)
     # test_svd(model_name, "../.cache", data_dir=data_dir, compress_rate=0.2, half_model=True)
     # test_fwsvd(
