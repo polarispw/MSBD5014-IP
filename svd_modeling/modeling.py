@@ -33,6 +33,21 @@ class SVDLinear(nn.Module):
         return output
 
 
+class LoRASVDLinear(SVDLinear):
+    def __init__(self, L1, L2, la, lb, bias=False, svd_init=True):
+        super(LoRASVDLinear, self).__init__(L1, L2, bias=bias, svd_init=svd_init)
+        self.lora_rank = la.shape[1]
+        self.lora_A = nn.Linear(la.shape[0], self.lora_rank, bias=bias)
+        self.lora_B = nn.Linear(self.lora_rank, lb.shape[1], bias=bias)
+
+    def forward(self, input):
+        stem_output = self.linear1(input)
+        stem_output = self.linear2(stem_output)
+        lora_output = self.lora_A(input)
+        lora_output = self.lora_B(lora_output)
+        return stem_output + lora_output
+
+
 def replace_linear_with_svd(
         base_model,
         compress_ratio: float,
@@ -69,7 +84,9 @@ def replace_linear_with_svd(
                 W = importance_dict[name].T
             else:
                 # lora weighted SVD
-                ...
+                la, lb = importance_dict[name]
+                W = la @ lb
+
             L1, L2 = weighted_svd_decomposition(
                 A,
                 W,
@@ -152,7 +169,7 @@ def svd_approximation(
         module.weight.data = new_A.T
 
         if print_info:
-            info.append(f"{name}: {A.shape} -> {L1.shape} @ {L2.shape}, error: {calc_error(A, L1, L2):.4f}")
+            info.append(f"{name}: {A.shape} ~ {L1.shape} @ {L2.shape}, error: {calc_error(A, L1, L2):.4f}")
 
     if print_info:
         print("\n".join(info))

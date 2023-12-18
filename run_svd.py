@@ -5,34 +5,25 @@ import torch
 
 torch.manual_seed(42)
 
-linear = torch.nn.Linear(2048, 5504, bias=False)
-w = linear.weight.data.T
-print(f"w: {w.shape}")
+linear1 = torch.nn.Linear(4096, 256)
+linear2 = torch.nn.Linear(256, 4096)
 
-num_ranks = 100
-# U, S, VT = torch.linalg.svd(w, full_matrices=False)
-U, S, V = torch.svd_lowrank(w, num_ranks)
-VT = V.mH
-print(f"U: {U.shape}, S: {S.shape}, VT: {VT.shape}")
+lora_a = torch.nn.Linear(4096, 32)
+lora_b = torch.nn.Linear(32, 4096)
 
-S_sqrt = torch.sqrt(S)
-L1 = U * S_sqrt.unsqueeze(dim=0)
-L2 = VT * S_sqrt.unsqueeze(dim=1)
-L1k = L1[:, :num_ranks]
-L2k = L2[:num_ranks, :]
-print(f"L1k: {L1k.shape}, L2k: {L2k.shape}")
+comb_linear1 = torch.nn.Linear(4096, 256)
+comb_linear2 = torch.nn.Linear(256, 4096)
 
-linear1 = torch.nn.Linear(2048, num_ranks, bias=False)
-linear2 = torch.nn.Linear(num_ranks, 5504, bias=False)
+gap = 256 - 32
+zero_pad_lora_a = torch.cat([lora_a.weight.data, torch.zeros((gap, 4096))], dim=0)
+zero_pad_lora_b = torch.cat([lora_b.weight.data, torch.zeros((4096, gap))], dim=1)
+comb_linear1.weight.data = linear1.weight.data + zero_pad_lora_a
+comb_linear2.weight.data = linear2.weight.data + zero_pad_lora_b
 
-linear1.weight.data = L1k.T
-linear2.weight.data = L2k.T
+input_tensor = torch.randn(1, 4096)
 
-input_ids = torch.randn(1, 2048)
+output1 = linear2(linear1(input_tensor)) + lora_b(lora_a(input_tensor))
+output2 = comb_linear2(comb_linear1(input_tensor))
 
-output1 = linear(input_ids)
-output2 = linear1(input_ids)
-output2 = linear2(output2)
-
-error = torch.linalg.norm(output1 - output2, ord="fro")
-print(f"error: {error}")
+error = torch.norm(output1 - output2)
+print(error.item())

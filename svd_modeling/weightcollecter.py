@@ -68,21 +68,6 @@ def load_ipt_dict(path: str, dtype: torch.dtype):
     return dic
 
 
-def get_lora_mask(
-    model,
-    target_params,
-    dir_list: List,
-):
-    # init weight dict
-    ipt_dict = {}
-    for name, param in model.named_parameters():
-        if any([target in name for target in target_params]):
-            ipt_dict[name] = []
-
-    for lora_dir in dir_list:
-        lora = torch.load(lora_dir)
-
-
 def run_collector(
         model,
         tokenizer,
@@ -100,8 +85,11 @@ def run_collector(
     dataset = process_data(dataset, tokenizer, seq_len, 'text')
 
     target_params = svd_modeling.TARGET_MODULES
+    ipt_dic = {}
     if collector_type == "fisher":
         ipt_dic = collect_fisher_info(model, target_params, dataset, batch_size, half_ipt, off_load)
+    elif collector_type == "lora":
+        ...
     else:
         raise NotImplementedError
 
