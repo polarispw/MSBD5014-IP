@@ -68,6 +68,21 @@ def load_ipt_dict(path: str, dtype: torch.dtype):
     return dic
 
 
+def get_lora_mask(
+    model,
+    target_params,
+    dir_list: List,
+):
+    # init weight dict
+    ipt_dict = {}
+    for name, param in model.named_parameters():
+        if any([target in name for target in target_params]):
+            ipt_dict[name] = []
+
+    for lora_dir in dir_list:
+        lora = torch.load(lora_dir)
+
+
 def run_collector(
         model,
         tokenizer,

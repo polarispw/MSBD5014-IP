@@ -64,7 +64,12 @@ def replace_linear_with_svd(
         num_ranks = calc_rank(A, compress_ratio)
 
         if importance_dict is not None and name in importance_dict:
-            W = importance_dict[name].T
+            if isinstance(importance_dict[name], torch.Tensor):
+                # fisher weighted SVD
+                W = importance_dict[name].T
+            else:
+                # lora weighted SVD
+                ...
             L1, L2 = weighted_svd_decomposition(
                 A,
                 W,
