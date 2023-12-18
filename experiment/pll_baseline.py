@@ -56,7 +56,7 @@ def test_svd(
 ):
     # for locally debug
     config = AutoConfig.from_pretrained(model_name)
-    config.update({"num_hidden_layers": 2})
+    # config.update({"num_hidden_layers": 2})
 
     torch.manual_seed(42)
     model_dtype = torch.float32 if not half_model else torch.float16
@@ -119,6 +119,7 @@ def test_svd(
 
             trainer.train()
 
+    print(model)
     ppl = evaluate_ppl(model, tokenizer, "wikitext", data_dir)
     print(f"ppl on wikitext-2: {ppl}")
 
