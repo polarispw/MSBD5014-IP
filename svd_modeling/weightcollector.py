@@ -7,7 +7,7 @@ import torch
 from transformers import TrainingArguments
 
 import svd_modeling
-from evaluate import process_data, hf_collator
+from evaluate import preprocess_for_casuallm
 from svd_modeling.mytrainer import NoOptimizerTrainer, LoRATrainer
 
 
@@ -40,7 +40,6 @@ def collect_fisher_info(
         model=model,
         args=args,
         train_dataset=dataset,
-        data_collator=hf_collator,
     )
 
     trainer.train()
@@ -97,7 +96,6 @@ def collect_lora_info(
         peft_config=peft_config,
         args=args,
         train_dataset=dataset,
-        data_collator=hf_collator,
     )
 
     trainer.train()
@@ -163,7 +161,7 @@ def run_collector(
     run the importance collector
     """
     # align with huggingface trainer
-    dataset = process_data(dataset, tokenizer, seq_len, 'text')
+    dataset = preprocess_for_casuallm(dataset, tokenizer, seq_len, 'text')
 
     target_params = svd_modeling.TARGET_MODULES
     ipt_dic = {}

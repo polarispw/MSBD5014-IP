@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 
-from decompose import (
+from .decompose import (
     calc_rank,
     calc_error,
     svd_decomposition,

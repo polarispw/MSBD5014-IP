@@ -2,7 +2,6 @@
 core functions for SVD algorithm.
 refer the repo: https://github.com/HanGuo97/lq-lora
 """
-
 import torch
 from typing import Tuple, Optional
 

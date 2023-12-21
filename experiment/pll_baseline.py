@@ -8,7 +8,7 @@ from datasets import load_dataset
 from peft import LoraConfig, TaskType, get_peft_model, PeftConfig
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
 
-from evaluate import evaluate_ppl, process_data, hf_collator
+from evaluate import evaluate_ppl, preprocess_for_casuallm, eval_ppl
 from svd_modeling import (
     TARGET_MODULES,
     linear_to_svdlinear,
@@ -22,7 +22,7 @@ from svd_modeling import (
 def test_vanilla(
     model_name,
     cache_dir: str = ".cache",
-    data_dir: str = "data",
+    data_dir: str = ".data",
     half_model: bool = False,
 ):
     # for locally debug
@@ -42,14 +42,17 @@ def test_vanilla(
     )
     tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 
-    ppl = evaluate_ppl(model, tokenizer, "wikitext", data_dir)
-    print(f"ppl on wikitext-2: {ppl}")
+    dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='test')
+    # dataset = dataset.select(range(200))
+    dataset = preprocess_for_casuallm(dataset, tokenizer, 2048, 'text')
+    # ppl = eval_ppl(model, dataset)
+    # print(f"ppl on wikitext-2: {ppl}")
 
 
 def test_svd(
     model_name,
     cache_dir: str = ".cache",
-    data_dir: str = "data",
+    data_dir: str = ".data",
     compress_rate: float = 0.1,
     fine_tune: bool = False,
     half_model: bool = False,
@@ -98,7 +101,7 @@ def test_svd(
 
             dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='train')
             dataset = dataset.select(range(2000))
-            dataset = process_data(dataset, tokenizer, 2048, 'text')
+            dataset = preprocess_for_casuallm(dataset, tokenizer, 2048, 'text')
 
             trainer = Trainer(
                 model=model,
@@ -114,7 +117,6 @@ def test_svd(
                     gradient_checkpointing=False,
                 ),
                 train_dataset=dataset,
-                data_collator=hf_collator,
             )
 
             trainer.train()
@@ -127,7 +129,7 @@ def test_svd(
 def test_fwsvd(
     model_name,
     cache_dir: str = ".cache",
-    data_dir: str = "data",
+    data_dir: str = ".data",
     weight_dir: str = None,
     compress_rate: float = 0.1,
     fine_tune: bool = False,
@@ -202,7 +204,7 @@ def test_fwsvd(
 
             dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='train')
             dataset = dataset.select(range(2000))
-            dataset = process_data(dataset, tokenizer, 2048, 'text')
+            dataset = preprocess_for_casuallm(dataset, tokenizer, 2048, 'text')
 
             trainer = Trainer(
                 model=model,
@@ -218,7 +220,6 @@ def test_fwsvd(
                     gradient_checkpointing=False,
                 ),
                 train_dataset=dataset,
-                data_collator=hf_collator,
             )
 
             trainer.train()
@@ -229,8 +230,8 @@ def test_fwsvd(
 
 if __name__ == "__main__":
     model_name = "princeton-nlp/Sheared-LLaMA-1.3B"
-    data_dir = "../.data"
-    test_vanilla(model_name, "../.cache", data_dir=data_dir, half_model=True)
+    # data_dir = "../.data"
+    # test_vanilla(model_name, "../.cache", data_dir=data_dir, half_model=True)
     # test_svd(model_name, "../.cache", data_dir=data_dir, compress_rate=0.2, half_model=True)
     # test_fwsvd(
     #     model_name,

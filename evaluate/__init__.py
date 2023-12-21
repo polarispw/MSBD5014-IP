@@ -1,10 +1,9 @@
 from .dataset import (
-    IndexDataset,
-    hf_collator,
-    process_data,
+    preprocess_for_casuallm,
 )
 
-from .ppl_eval import (
+from .evaluator import (
     ManualPPLMetric,
     evaluate_ppl,
+    eval_ppl,
 )

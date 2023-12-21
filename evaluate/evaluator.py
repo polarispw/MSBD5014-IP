@@ -1,9 +1,10 @@
 import torch
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from torch import nn
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from .dataset import process_data
+from .dataset import preprocess_for_casuallm
 
 
 class ManualPPLMetric:
@@ -34,7 +35,7 @@ def evaluate_ppl(model, tokenizer, dataset_name, dataset_cache_dir, seq_len=2048
     else:
         raise NotImplementedError
 
-    dataset = process_data(dataset, tokenizer, seq_len, field_name)
+    dataset = preprocess_for_casuallm(dataset, tokenizer, seq_len, field_name)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False)
     model.eval()
     metric = ManualPPLMetric()
@@ -46,3 +47,19 @@ def evaluate_ppl(model, tokenizer, dataset_name, dataset_cache_dir, seq_len=2048
         metric.add_nll(lm_logits, batch, seq_len)
     ppl = metric.calculate_ppl(len(dataset), seq_len)
     return ppl
+
+
+# the above to be deprecated
+def eval_ppl(model, dataset: Dataset) -> float:
+    dataset = dataset.with_format("torch", device=model.device)
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+
+    model.eval()
+    nlls = []
+    for batch in tqdm(dataloader, desc="Evaluating..."):
+        with torch.no_grad():
+            loss = model(**batch).loss
+            nlls.append(loss)
+
+    pll = torch.exp(torch.stack(nlls).mean())
+    return pll.item()
