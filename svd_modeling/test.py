@@ -42,4 +42,6 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.float16
 )
 target_params = TARGET_MODULES
-get_lora_mask(model, target_params, ["../.cache/checkpoint-94/adapter_model.bin"])
+mask = get_lora_mask(model, target_params, ["../.cache/checkpoint-94/adapter_model.bin"])
+for k, v in mask.items():
+    print(k, v[0][0].shape[0], v[0][1].shape[1])

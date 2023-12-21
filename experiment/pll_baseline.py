@@ -11,11 +11,11 @@ from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, Traini
 from evaluate import evaluate_ppl, process_data, hf_collator
 from svd_modeling import (
     TARGET_MODULES,
-    replace_linear_with_svd,
+    linear_to_svdlinear,
     svd_approximation,
-    save_ipt_dict,
+    save_fisher_info,
     run_collector,
-    load_ipt_dict,
+    load_fisher_info,
 )
 
 
@@ -72,7 +72,7 @@ def test_svd(
     tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 
     if not fine_tune:
-        replace_linear_with_svd(model.model, compress_rate, TARGET_MODULES, print_info=True)
+        linear_to_svdlinear(model.model, compress_rate, TARGET_MODULES, print_info=True)
     else:
         # decompose then reconstruct
         svd_approximation(model.model, compress_rate, TARGET_MODULES, print_info=True)
@@ -166,17 +166,17 @@ def test_fwsvd(
         )
 
         save_dir = cache_dir + "/fisher.pt"
-        save_ipt_dict(ipt_dic, save_dir)
+        save_fisher_info(ipt_dic, save_dir)
 
         weight_dir = save_dir
 
     ipt_dtype = torch.float32 if not half_ipt else torch.float16
-    ipt_dic = load_ipt_dict(weight_dir, ipt_dtype)
+    ipt_dic = load_fisher_info(weight_dir, ipt_dtype)
     for k, v in ipt_dic.items():
         print(k, v.shape, v.max().item(), v.min().item(), "\n")
 
     if not fine_tune:
-        replace_linear_with_svd(model.model, compress_rate, TARGET_MODULES, importance_dict=ipt_dic, print_info=True)
+        linear_to_svdlinear(model.model, compress_rate, TARGET_MODULES, importance_dict=ipt_dic, print_info=True)
     else:
         # decompose then reconstruct
         svd_approximation(model.model, compress_rate, TARGET_MODULES, importance_dict=ipt_dic, print_info=True)

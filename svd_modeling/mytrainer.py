@@ -4,13 +4,15 @@ Specialized trainer for running importance collection
 from typing import Dict, Union, Any, List
 
 import torch
-from peft import PeftModel
+from peft import PeftModel, get_peft_model, LoraConfig
 from torch import nn
 from transformers import Trainer
 from transformers.modeling_utils import unwrap_model
 from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING_NAMES
 from transformers.trainer_utils import ShardedDDPOption
 from transformers.utils import is_sagemaker_mp_enabled, is_peft_available
+
+from svd_modeling.modeling import LoRASVDLinear
 
 
 def clamp_to_fp16_range(tensor):
@@ -103,3 +105,26 @@ class NoOptimizerTrainer(Trainer):
 
     def get_ipt_dict(self):
         return self.ipt_dict
+
+
+class LoRATrainer(Trainer):
+    """
+    for PEFT LoRA model
+    """
+    def __init__(self, base_model, peft_config: LoraConfig, **kwargs):
+        super().__init__(**kwargs)
+        self.base_model = base_model
+        self.model = get_peft_model(base_model, peft_config)
+
+
+class LoRASVDTrainer(Trainer):
+    """
+    for fine-tuning LoRA weighted SVD model
+    """
+    def __init__(self, lora_tuning, **kwargs):
+        super().__init__(**kwargs)
+        if lora_tuning:
+            print("##### Tuning LoRA module, keep stem frozen #####")
+            for n, m in self.model.named_modules():
+                if isinstance(m, LoRASVDLinear):
+                    m.freeze_stem()

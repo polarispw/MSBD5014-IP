@@ -1,5 +1,5 @@
 from .modeling import (
-    replace_linear_with_svd,
+    linear_to_svdlinear,
     svd_approximation,
 )
 
@@ -10,16 +10,18 @@ from .decompose import (
     weighted_svd_decomposition
 )
 
-from .weightcollecter import (
+from .weightcollector import (
     collect_fisher_info,
-    save_ipt_dict,
-    load_ipt_dict,
+    save_fisher_info,
+    load_fisher_info,
     run_collector,
 )
 
 from .mytrainer import (
     clamp_to_fp16_range,
     NoOptimizerTrainer,
+    LoRATrainer,
+    LoRASVDLinear,
 )
 
 TARGET_MODULES = [

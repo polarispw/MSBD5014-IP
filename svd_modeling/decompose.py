@@ -1,4 +1,5 @@
 """
+core functions for SVD algorithm.
 refer the repo: https://github.com/HanGuo97/lq-lora
 """
 
@@ -57,7 +58,9 @@ def svd_decomposition(
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     if A.ndim != 2:
         raise ValueError(f"Expected 2D Matrix, but got {A.ndim}.")
-    if A.dtype != torch.float32:
+
+    A_type = A.dtype
+    if A_type != torch.float32:
         A = A.float()
 
     if randomized is False:
@@ -75,6 +78,9 @@ def svd_decomposition(
     L2 = VT * S_sqrt.unsqueeze(dim=1)
     L1k = L1[:, :num_ranks]
     L2k = L2[:num_ranks, :]
+
+    L1k = L1k.to(A_type)
+    L2k = L2k.to(A_type)
     return L1k, L2k
 
 
@@ -92,13 +98,16 @@ def weighted_svd_decomposition(
         raise ValueError(f"Expected 2D Matrix, but got {A.ndim} and {W.ndim}.")
     if A.shape != W.shape:
         raise ValueError(f"Expected A.shape == W.shape, but got {A.shape} and {W.shape}.")
-    if A.dtype != W.dtype:
+    # if A.dtype != W.dtype:
+    #     A = A.float()
+    #     W = W.float()
+    A_type = A.dtype
+    if A_type != torch.float32:
         A = A.float()
-        W = W.float()
-    if A.device != W.device:
+    if W.device != A.device:
         W = W.to(A.device)
 
-    W = torch.clamp(W, min=5.97e-08)  # avoid zero division in line 140+
+    # W = torch.clamp(W, min=5.97e-08)  # avoid zero division in line 140+
 
     if heuristic is None:
         heuristic = "two-sided"
@@ -150,6 +159,8 @@ def weighted_svd_decomposition(
     else:
         raise NotImplementedError
 
+    L1 = L1.to(A_type)
+    L2 = L2.to(A_type)
     return L1, L2
 
 
@@ -173,7 +184,8 @@ if __name__ == "__main__":
     print(model)
 
     A = model.layers[0].mlp.up_proj.weight.detach().clone()
-    W = torch.randint_like(A, 0, 2).float().to("cuda:0")
+    A = A.half()
+    W = torch.randint_like(A, 0, 2).half().to("cuda:0")
     n_ranks = calc_rank(A, args.compress_ratio)
 
     print(f"compress_ratio: {args.compress_ratio}, num_ranks: {n_ranks}, "
@@ -201,3 +213,4 @@ if __name__ == "__main__":
     end = time.time()
     print(f"error: {calc_error(A, L1, L2)}")
     print(f"svd_decomposition: {(end - start) / args.num_runs * 1000:.2f} ms")
+    print(A.dtype, L1.dtype, L2.dtype)
