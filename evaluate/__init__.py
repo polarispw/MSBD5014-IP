@@ -1,9 +1,8 @@
 from .dataset import (
-    preprocess_for_casuallm,
+    preprocess_for_causallm,
 )
 
 from .evaluator import (
-    ManualPPLMetric,
     evaluate_ppl,
     eval_ppl,
 )

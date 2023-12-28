@@ -10,13 +10,13 @@ lora = torch.load("../.cache/checkpoint-94/adapter_model.bin")
 
 def get_lora_mask(
         model,
-        target_params,
+        target_modules: List[str],
         dir_list: List,
 ):
     # init weight dict
     ipt_dict = {}
     for name, param in model.named_parameters():
-        if any([target in name for target in target_params]):
+        if any([target in name for target in target_modules]):
             ipt_dict[name] = []
             print(name)
 

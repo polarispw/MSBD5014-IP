@@ -121,7 +121,7 @@ class LoRASVDTrainer(Trainer):
     """
     for fine-tuning LoRA weighted SVD model
     """
-    def __init__(self, lora_tuning, **kwargs):
+    def __init__(self, lora_tuning: bool, **kwargs):
         super().__init__(**kwargs)
         if lora_tuning:
             print("##### Tuning LoRA module, keep stem frozen #####")

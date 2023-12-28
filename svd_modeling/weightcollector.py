@@ -7,7 +7,7 @@ import torch
 from transformers import TrainingArguments
 
 import svd_modeling
-from evaluate import preprocess_for_casuallm
+from evaluate import preprocess_for_causallm
 from svd_modeling.mytrainer import NoOptimizerTrainer, LoRATrainer
 
 
@@ -60,7 +60,7 @@ def load_fisher_info(path: str, dtype: torch.dtype, device: torch.device = "cpu"
     """
     load the tensor dict
     """
-    precision_rank = {"float16": 1, "float32": 2}
+    precision_rank = {"torch.float16": 1, "torch.float32": 2}
     dic = torch.load(path, map_location=device)
 
     if dtype != dic[list(dic.keys())[0]].dtype:
@@ -110,40 +110,23 @@ def load_lora_info(
     ipt_dict = {}
     for name, param in model.named_parameters():
         if any([target in name for target in target_params]):
+            # layers.###[.weight]
+            name = name[:-7]
             ipt_dict[name] = []
             print(name)
 
     # collect lora weights from dir_list
-    prefix = "base_model.model."
+    prefix = "base_model.model.model."
     for lora_dir in dir_list:
         lora = torch.load(lora_dir)
         # for n in lora.keys():
         #     print(n)
         for name in ipt_dict.keys():
-            name1 = ".".join(name.split(".")[:-1]) + ".lora_A.weight"
-            name1 = prefix + name1
-            name2 = ".".join(name.split(".")[:-1]) + ".lora_B.weight"
-            name2 = prefix + name2
+            name1 = prefix + name + ".lora_A.weight"
+            name2 = prefix + name + ".lora_B.weight"
             ipt_dict[name].append((lora[name1].T, lora[name2].T))
 
     return ipt_dict
-
-
-def process_lora_info(
-        module_name: str,
-        ipt_dict: Dict[str, List[Tuple[torch.Tensor, torch.Tensor]]],
-) -> torch.Tensor:
-    """
-    return the lora info from domains for certain module
-    """
-    l = ipt_dict[module_name]
-    W = torch.zeros((l[0][0].shape[0], l[0][1].shape[1]))
-    for t in l:
-        W += torch.abs(t[0] @ t[1])
-    W /= len(l)
-    max_w = W.max()
-    W = -(W - max_w) + 1e-7  # avoid zero division in weighted_svd_decomposition
-    return W
 
 
 # will be deprecated after experiment codes finished
@@ -161,7 +144,7 @@ def run_collector(
     run the importance collector
     """
     # align with huggingface trainer
-    dataset = preprocess_for_casuallm(dataset, tokenizer, seq_len, 'text')
+    dataset = preprocess_for_causallm(dataset, tokenizer, seq_len, 'text')
 
     target_params = svd_modeling.TARGET_MODULES
     ipt_dic = {}

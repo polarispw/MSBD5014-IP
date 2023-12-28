@@ -8,7 +8,8 @@ from datasets import load_dataset
 from tqdm import tqdm
 
 # eval llama 1.3b on wikitext-2
-from evaluate import preprocess_for_casuallm
+from evaluate import preprocess_for_causallm
+
 
 model = AutoModelForCausalLM.from_pretrained(
     "princeton-nlp/Sheared-LLaMA-1.3B",
@@ -20,7 +21,7 @@ tokenizer = AutoTokenizer.from_pretrained("princeton-nlp/Sheared-LLaMA-1.3B", ca
 
 dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=".data", split='test')
 dataset = dataset.select(range(200))
-dataset = preprocess_for_casuallm(dataset, tokenizer, 2048, "text")
+dataset = preprocess_for_causallm(dataset, tokenizer, 2048, "text")
 dataset = dataset.with_format("torch", device=model.device)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 

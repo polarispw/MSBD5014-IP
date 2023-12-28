@@ -44,8 +44,10 @@ class LoRASVDLinear(SVDLinear):
         self.lora_B = nn.Linear(self.lora_rank, lb.shape[1], bias=bias)
 
         if svd_init:
-            self.lora_A.weight.data = la
-            self.lora_B.weight.data = lb
+            la = la.to(L1.device, dtype=L1.dtype)
+            lb = lb.to(L2.device, dtype=L2.dtype)
+            self.lora_A.weight.data = la.T
+            self.lora_B.weight.data = lb.T
 
     def forward(self, input):
         stem_output = self.linear1(input)
@@ -57,6 +59,24 @@ class LoRASVDLinear(SVDLinear):
     def freeze_stem(self):
         self.linear1.weight.requires_grad = False
         self.linear2.weight.requires_grad = False
+
+
+def process_lora_info(
+        lora_list: List[Tuple[torch.Tensor, torch.Tensor]],
+        return_lora_idx: int = 0,
+        scale_factor=1e6,
+) -> (torch.Tensor, torch.Tensor, torch.Tensor):
+    """
+    return the lora info from domains for certain module
+    """
+    l = lora_list
+    W = torch.zeros((l[0][0].shape[0], l[0][1].shape[1]), device=l[0][0].device)
+    for t in l:
+        W += torch.abs(t[0] @ t[1])
+    W /= len(l)
+    max_w = W.max()
+    W = -(W - max_w) * scale_factor + 1e-7  # avoid zero division in weighted_svd_decomposition
+    return W, l[return_lora_idx][0], l[return_lora_idx][1]
 
 
 # get target module in LLaMA, it may differ in different models
@@ -73,7 +93,7 @@ def linear_to_svdlinear(
         base_model,
         compress_ratio: float,
         target_module: List[str],
-        importance_dict: [Dict[str, torch.Tensor], Dict[str, Tuple]] = None,
+        ipt_dict: [Dict[str, torch.Tensor], Dict[str, Tuple]] = None,
         memory_efficient: bool = True,
         print_info: bool = False,
 ):
@@ -92,14 +112,24 @@ def linear_to_svdlinear(
         num_ranks = calc_rank(A, compress_ratio)
         la, lb = None, None
 
-        if importance_dict is not None and name in importance_dict:
-            if isinstance(importance_dict[name], Tuple):
+        if ipt_dict is not None and name in ipt_dict:
+            if isinstance(ipt_dict[name], List):
                 # lora weighted SVD
-                la, lb = importance_dict[name]
-                W = la @ lb
+                W, la, lb = process_lora_info(ipt_dict[name])
             else:
                 # fisher weighted SVD
-                W = importance_dict[name].T
+                W = ipt_dict[name].T
+
+            import matplotlib.pyplot as plt
+            # maxpool with kernel size 8
+            maxpool = torch.nn.MaxPool2d(kernel_size=8, stride=8)
+            w = maxpool(W.float().cpu().unsqueeze(dim=0).unsqueeze(dim=0)).squeeze()
+            plt.imshow(W.cpu().numpy(), vmin=W.min(), vmax=W.max())
+            # scale the resolution to 1600x1600
+            plt.gcf().set_size_inches(16, 16)
+            # add value bar to the right
+            plt.colorbar()
+            plt.show()
 
             L1, L2 = weighted_svd_decomposition(
                 A,
@@ -210,6 +240,6 @@ if __name__ == "__main__":
             importance_dict[n[:-7]] = (la, lb)
             # importance_dict[n[:-7]] = torch.ones_like(p).float().to("cuda:0")
 
-    linear_to_svdlinear(model, 0.1, TARGET_MODULES, importance_dict=importance_dict, print_info=True)
+    linear_to_svdlinear(model, 0.1, TARGET_MODULES, ipt_dict=importance_dict, print_info=True)
     print(model)
     print(model.layers[0].mlp.up_proj.linear1.weight.data.dtype)
