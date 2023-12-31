@@ -72,12 +72,12 @@ if __name__ == "__main__":
     # "princeton-nlp/Sheared-LLaMA-1.3B"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test_type", type=str, default="lwsvd")
+    parser.add_argument("--test_type", type=str, default="fwsvd")
     parser.add_argument("--model_name", type=str, default="princeton-nlp/Sheared-LLaMA-1.3B")
     parser.add_argument("--cache_dir", type=str, default=".cache")
     parser.add_argument("--data_dir", type=str, default=".data")
     parser.add_argument("--iptdict_dir", type=str, default=".cache/llama1b_fisher.pt")
-    parser.add_argument("--compress_rate", type=float, default=0.5)
+    parser.add_argument("--compress_rate", type=float, default=0.1)
     parser.add_argument("--fine_tune", type=bool, default=False)
     parser.add_argument("--half_model", type=bool, default=True)
     parser.add_argument("--half_ipt", type=bool, default=True)

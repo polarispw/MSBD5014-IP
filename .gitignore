@@ -6,6 +6,7 @@ __pycache__/
 .profiles
 .cache
 .data
+lora_weights
 
 # C extensions
 *.so

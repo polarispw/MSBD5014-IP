@@ -4,8 +4,10 @@ build the SVD model from the original model
 import sys
 from typing import List, Dict, Tuple
 
+import numpy as np
 import torch
 import torch.nn as nn
+from matplotlib.gridspec import GridSpec
 from tqdm import tqdm
 
 from .decompose import (
@@ -48,6 +50,10 @@ class LoRASVDLinear(SVDLinear):
             lb = lb.to(L2.device, dtype=L2.dtype)
             self.lora_A.weight.data = la.T
             self.lora_B.weight.data = lb.T
+        else:
+            # init with zeros
+            self.lora_A.weight.data = torch.zeros_like(self.lora_A.weight.data, device=L1.device).T
+            self.lora_B.weight.data = torch.zeros_like(self.lora_B.weight.data, device=L2.device).T
 
     def forward(self, input):
         stem_output = self.linear1(input)
@@ -63,8 +69,8 @@ class LoRASVDLinear(SVDLinear):
 
 def process_lora_info(
         lora_list: List[Tuple[torch.Tensor, torch.Tensor]],
-        return_lora_idx: int = 0,
-        scale_factor=1e6,
+        return_lora_idx: int = 1,
+        scale_factor=1e-2,
 ) -> (torch.Tensor, torch.Tensor, torch.Tensor):
     """
     return the lora info from domains for certain module
@@ -75,7 +81,16 @@ def process_lora_info(
         W += torch.abs(t[0] @ t[1])
     W /= len(l)
     max_w = W.max()
-    W = -(W - max_w) * scale_factor + 1e-7  # avoid zero division in weighted_svd_decomposition
+    W = max_w - W + 1e-7  # avoid zero division in weighted_svd_decomposition
+    # rescale to 0-1
+    w_min = W.min()
+    w_max = W.max()
+    W = (W - w_min) / (w_max - w_min)
+    # W *= scale_factor
+
+    # retain top 5% weights
+    flag = torch.quantile(W, 0.99)
+    W = torch.where(W >= flag, W, W * scale_factor)
     return W, l[return_lora_idx][0], l[return_lora_idx][1]
 
 
@@ -120,16 +135,41 @@ def linear_to_svdlinear(
                 # fisher weighted SVD
                 W = ipt_dict[name].T
 
-            import matplotlib.pyplot as plt
-            # maxpool with kernel size 8
-            maxpool = torch.nn.MaxPool2d(kernel_size=8, stride=8)
-            w = maxpool(W.float().cpu().unsqueeze(dim=0).unsqueeze(dim=0)).squeeze()
-            plt.imshow(W.cpu().numpy(), vmin=W.min(), vmax=W.max())
-            # scale the resolution to 1600x1600
-            plt.gcf().set_size_inches(16, 16)
-            # add value bar to the right
-            plt.colorbar()
-            plt.show()
+            # import matplotlib.pyplot as plt
+            # # # maxpool with kernel size 8
+            # # maxpool = torch.nn.MaxPool2d(kernel_size=8, stride=8)
+            # # w = maxpool(W.float().unsqueeze(dim=0)).squeeze()
+            #
+            # # Create a 3x3 grid layout
+            # fig = plt.figure(figsize=(16, 16))
+            # gs = GridSpec(3, 3, width_ratios=[4, 10, 2], height_ratios=[4, 10, 2])
+            #
+            # # Column sum histogram on the top
+            # ax_col_hist = fig.add_subplot(gs[0, 1])
+            # col_sum = W.sum(dim=0).cpu().numpy()
+            # ax_col_hist.bar(range(W.shape[1]), col_sum, color='blue')
+            # ax_col_hist.set(title='Column Sum')
+            #
+            # # Row sum histogram on the left
+            # ax_row_hist = fig.add_subplot(gs[1, 0])
+            # row_sum = W.sum(dim=1).cpu().numpy()
+            # ax_row_hist.barh(range(W.shape[0]), row_sum, color='red')
+            # ax_row_hist.invert_yaxis()
+            # ax_row_hist.set(title='Row Sum')
+            #
+            # # Main plot (matrix image) in the bottom right
+            # ax_main = fig.add_subplot(gs[1, 1])
+            # im = ax_main.imshow(W.cpu().numpy(), vmin=W.min(), vmax=W.max())
+            #
+            # # Add colorbar to the right of the matrix
+            # ax_cbar = fig.add_subplot(gs[1, 2])
+            # cbar = fig.colorbar(im, cax=ax_cbar)
+            # plt.show()
+            #
+            # # save the figure
+            # fig_name = name.replace(".", "_")
+            # plt.savefig(f"./.profiles/lwsvd/{fig_name}.png")
+            # plt.close()
 
             L1, L2 = weighted_svd_decomposition(
                 A,
