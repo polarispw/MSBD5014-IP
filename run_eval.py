@@ -55,11 +55,9 @@ def run_pll_baseline(
             model_name,
             cache_dir=cache_dir,
             data_dir=data_dir,
-            weight_dir=iptdict_dir,
             compress_rate=compress_rate,
             fine_tune=fine_tune,
             half_model=half_model,
-            half_ipt=half_ipt,
         )
     else:
         raise NotImplementedError(f"test type {test_type} not implemented")
@@ -72,7 +70,7 @@ if __name__ == "__main__":
     # "princeton-nlp/Sheared-LLaMA-1.3B"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test_type", type=str, default="fwsvd")
+    parser.add_argument("--test_type", type=str, default="lwsvd")
     parser.add_argument("--model_name", type=str, default="princeton-nlp/Sheared-LLaMA-1.3B")
     parser.add_argument("--cache_dir", type=str, default=".cache")
     parser.add_argument("--data_dir", type=str, default=".data")

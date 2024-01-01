@@ -4,13 +4,9 @@ Specialized trainer for running importance collection
 from typing import Dict, Union, Any, List
 
 import torch
-from peft import PeftModel, get_peft_model, LoraConfig
 from torch import nn
 from transformers import Trainer
-from transformers.modeling_utils import unwrap_model
-from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING_NAMES
-from transformers.trainer_utils import ShardedDDPOption
-from transformers.utils import is_sagemaker_mp_enabled, is_peft_available
+from transformers.utils import is_sagemaker_mp_enabled
 
 from svd_modeling.modeling import LoRASVDLinear
 
@@ -50,15 +46,12 @@ class NoOptimizerTrainer(Trainer):
                 }]
             optimizer_cls, optimizer_kwargs = Trainer.get_optimizer_cls_and_kwargs(self.args)
 
-            if self.sharded_ddp == ShardedDDPOption.SIMPLE:
-                raise NotImplementedError("Sharded DDP Simple is not yet supported for NoOptimizerTrainer.")
-            else:
-                self.optimizer = optimizer_cls(optimizer_grouped_parameters, **optimizer_kwargs)
-                if optimizer_cls.__name__ == "Adam8bit":
-                    raise NotImplementedError("Adam8bit is not yet supported for NoOptimizerTrainer.")
+            self.optimizer = optimizer_cls(optimizer_grouped_parameters, **optimizer_kwargs)
+            if optimizer_cls.__name__ == "Adam8bit":
+                raise NotImplementedError("Adam8bit is not supported yet.")
 
         if is_sagemaker_mp_enabled():
-            print("Wrapping optimizer inside SMP, not supported.")
+            raise NotImplementedError("SageMaker Model Parallelism is not supported yet.")
 
         return self.optimizer
 
@@ -105,16 +98,6 @@ class NoOptimizerTrainer(Trainer):
 
     def get_ipt_dict(self):
         return self.ipt_dict
-
-
-class LoRATrainer(Trainer):
-    """
-    for PEFT LoRA model
-    """
-    def __init__(self, base_model, peft_config: LoraConfig, **kwargs):
-        super().__init__(**kwargs)
-        self.base_model = base_model
-        self.model = get_peft_model(base_model, peft_config)
 
 
 class LoRASVDTrainer(Trainer):

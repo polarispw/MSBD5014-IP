@@ -8,7 +8,7 @@ from datasets import load_dataset
 from peft import LoraConfig, TaskType, get_peft_model, PeftConfig
 from transformers import AutoConfig, AutoTokenizer, AutoModelForCausalLM, TrainingArguments, Trainer
 
-from evaluate import evaluate_ppl, preprocess_for_causallm, eval_ppl
+from evaluate import preprocess_for_causallm, eval_ppl
 from svd_modeling import (
     TARGET_MODULES,
     linear_to_svdlinear,
@@ -45,7 +45,6 @@ def test_vanilla(
     tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 
     dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='test')
-    dataset = dataset.select(range(200))
     dataset = preprocess_for_causallm(dataset, tokenizer, 2048, 'text')
     ppl = eval_ppl(model, dataset)
     print(f"ppl on wikitext-2: {ppl}")
@@ -93,8 +92,8 @@ def test_svd(
             peft_config = LoraConfig(
                 task_type=TaskType.CAUSAL_LM,
                 inference_mode=False,
-                r=8,
-                lora_alpha=32,
+                r=16,
+                lora_alpha=8,
                 lora_dropout=0.1,
                 target_modules=TARGET_MODULES,
             )
@@ -102,8 +101,7 @@ def test_svd(
             model.print_trainable_parameters()
 
             dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='train')
-            dataset = dataset.select(range(2000))
-            dataset = preprocess_for_causallm(dataset, tokenizer, 2048, 'text')
+            dataset = preprocess_for_causallm(dataset, tokenizer, 2048, 'text', True)
 
             trainer = Trainer(
                 model=model,
@@ -124,7 +122,10 @@ def test_svd(
             trainer.train()
 
     print(model)
-    ppl = evaluate_ppl(model, tokenizer, "wikitext", data_dir)
+    test_ds = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='test')
+    test_ds = preprocess_for_causallm(test_ds, tokenizer, 2048, 'text')
+
+    ppl = eval_ppl(model, test_ds)
     print(f"ppl on wikitext-2: {ppl}")
 
 
@@ -196,8 +197,8 @@ def test_fwsvd(
             peft_config = LoraConfig(
                 task_type=TaskType.CAUSAL_LM,
                 inference_mode=False,
-                r=8,
-                lora_alpha=32,
+                r=16,
+                lora_alpha=8,
                 lora_dropout=0.1,
                 target_modules=TARGET_MODULES,
             )
@@ -206,7 +207,7 @@ def test_fwsvd(
 
             dataset = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='train')
             dataset = dataset.select(range(2000))
-            dataset = preprocess_for_causallm(dataset, tokenizer, 2048, 'text')
+            dataset = preprocess_for_causallm(dataset, tokenizer, 2048, 'text', True)
 
             trainer = Trainer(
                 model=model,
@@ -226,7 +227,10 @@ def test_fwsvd(
 
             trainer.train()
 
-    ppl = evaluate_ppl(model, tokenizer, "wikitext", data_dir)
+    test_ds = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='test')
+    test_ds = preprocess_for_causallm(test_ds, tokenizer, 2048, 'text')
+
+    ppl = eval_ppl(model, test_ds)
     print(f"ppl on wikitext-2: {ppl}")
 
 
@@ -234,11 +238,9 @@ def test_lwsvd(
     model_name,
     cache_dir: str = ".cache",
     data_dir: str = ".data",
-    weight_dir: str = None,
     compress_rate: float = 0.1,
     fine_tune: bool = False,
     half_model: bool = False,
-    half_ipt: bool = False,
 ):
     # for locally debug
     config = AutoConfig.from_pretrained(model_name)
@@ -275,9 +277,9 @@ def test_lwsvd(
     else:
         train_ds = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='train')
         train_ds = train_ds.select(range(2000))
-        train_ds = preprocess_for_causallm(train_ds, tokenizer, 2048, 'text')
+        train_ds = preprocess_for_causallm(train_ds, tokenizer, 2048, 'text', True)
 
-        LoRASVDTrainer(
+        trainer = LoRASVDTrainer(
             lora_tuning=True,
             model=model,
             dataset_name=train_ds,
@@ -293,6 +295,8 @@ def test_lwsvd(
                 gradient_checkpointing=False,
             ),
         )
+
+        trainer.train()
 
     test_ds = load_dataset('wikitext', 'wikitext-2-raw-v1', cache_dir=data_dir, split='test')
     test_ds = preprocess_for_causallm(test_ds, tokenizer, 2048, 'text')

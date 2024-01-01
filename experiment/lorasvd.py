@@ -47,32 +47,19 @@ def lora_tune(
         cache_dir: str = ".cache",
         data_dir: str = ".data",
         save_dir: str = "lora_weights",
-        half_model: bool = False,
+        quantize: bool = False,
 ):
-    # for locally debug
-    config = AutoConfig.from_pretrained(model_name)
-    # config.update({"num_hidden_layers": 2})
-
     torch.manual_seed(42)
-    model_dtype = torch.float32 if not half_model else torch.float16
-    device = f"cuda:{torch.cuda.current_device()}"
-
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        config=config,
-        cache_dir=cache_dir,
-        device_map=device,
-        torch_dtype=model_dtype
-    )
+    model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir)
     tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 
     # lora config
     peft_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         inference_mode=False,
-        r=16,
-        lora_alpha=32,
-        lora_dropout=0.1,
+        r=32,
+        lora_alpha=16,
+        lora_dropout=0.05,
         target_modules=TARGET_MODULES,
     )
     model = get_peft_model(model, peft_config)
@@ -81,7 +68,7 @@ def lora_tune(
     train_data_dir = os.path.join(data_dir, 'oscar.json')
     train_ds = load_dataset('json', data_files=train_data_dir, field=dataset_name)['train']
     train_ds = train_ds.select(range(2000))
-    train_ds = preprocess_for_causallm(train_ds, tokenizer, 2048, 'text')
+    train_ds = preprocess_for_causallm(train_ds, tokenizer, 2048, 'text', True)
 
     save_dir = os.path.join(save_dir, dataset_name)
     trainer = Trainer(
@@ -89,11 +76,14 @@ def lora_tune(
         args=TrainingArguments(
             output_dir=save_dir,
             overwrite_output_dir=True,
+            learning_rate=1e-4,
             num_train_epochs=1,
+            max_steps=-1,
+            save_strategy="epoch",
+            save_only_model=True,
             per_device_train_batch_size=1,
             gradient_accumulation_steps=4,
             logging_steps=4,
-            save_strategy="epoch",
             fp16=False,
             gradient_checkpointing=False,
         ),
@@ -109,12 +99,14 @@ def lora_tune(
 
 
 if __name__ == "__main__":
-    # download_OSCAR(LANGUAGES_LIST, 100, ".data")
+    # collate 8 languages OSCAR dataset
+    # download_OSCAR(LANGUAGES_LIST, 5000, ".data")
+
+    # tune Lora on OSCAR dataset ["ar", "zh", "en", "fr", "ja", "ko", "es", "ru"]
     lora_tune(
         "princeton-nlp/Sheared-LLaMA-1.3B",
         "en",
         cache_dir="../.cache",
         data_dir="../.data",
         save_dir="lora_weights",
-        half_model=False,
     )

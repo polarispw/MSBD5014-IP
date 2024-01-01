@@ -7,7 +7,6 @@ def run_lora(
     cache_dir: str = ".cache",
     data_dir: str = ".data",
     save_dir: str = "lora_weights",
-    half_model: bool = False,
 ):
     lora_tune(
         model_name,
@@ -15,7 +14,6 @@ def run_lora(
         cache_dir=cache_dir,
         data_dir=data_dir,
         save_dir=save_dir,
-        half_model=half_model,
     )
 
 
@@ -31,7 +29,6 @@ if __name__ == "__main__":
     parser.add_argument("--cache_dir", type=str, default=".cache")
     parser.add_argument("--data_dir", type=str, default=".data")
     parser.add_argument("--save_dir", type=str, default="lora_weights")
-    parser.add_argument("--half_model", type=bool, default=False)
     args = parser.parse_args()
 
     run_lora(
@@ -40,5 +37,4 @@ if __name__ == "__main__":
         cache_dir=args.cache_dir,
         data_dir=args.data_dir,
         save_dir=args.save_dir,
-        half_model=args.half_model,
     )

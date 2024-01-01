@@ -1,6 +1,7 @@
 """
 build the SVD model from the original model
 """
+import os.path
 import sys
 from typing import List, Dict, Tuple
 
@@ -39,6 +40,7 @@ class LoRASVDLinear(SVDLinear):
     """
     further optimization is necessary to integrate the LoRA module into the SVD module
     """
+
     def __init__(self, L1, L2, la, lb, bias=False, svd_init=True):
         super(LoRASVDLinear, self).__init__(L1, L2, bias=bias, svd_init=svd_init)
         self.lora_rank = la.shape[1]
@@ -75,23 +77,20 @@ def process_lora_info(
     """
     return the lora info from domains for certain module
     """
-    l = lora_list
-    W = torch.zeros((l[0][0].shape[0], l[0][1].shape[1]), device=l[0][0].device)
-    for t in l:
+    W = torch.zeros((lora_list[0][0].shape[0], lora_list[0][1].shape[1]), device=lora_list[0][0].device)
+    for t in lora_list:
         W += torch.abs(t[0] @ t[1])
-    W /= len(l)
-    max_w = W.max()
-    W = max_w - W + 1e-7  # avoid zero division in weighted_svd_decomposition
+
     # rescale to 0-1
     w_min = W.min()
     w_max = W.max()
     W = (W - w_min) / (w_max - w_min)
-    # W *= scale_factor
+    W += 1e-7  # avoid zero division in weighted_svd_decomposition
 
-    # retain top 5% weights
+    # retain top weights
     flag = torch.quantile(W, 0.99)
     W = torch.where(W >= flag, W, W * scale_factor)
-    return W, l[return_lora_idx][0], l[return_lora_idx][1]
+    return W, lora_list[return_lora_idx][0], lora_list[return_lora_idx][1]
 
 
 # get target module in LLaMA, it may differ in different models
@@ -104,6 +103,58 @@ def _set_module(model, name, new_module):
     setattr(cur_mod, name.split(".")[-1], new_module)
 
 
+def _plot_distribution(
+        W: torch.Tensor,
+        name: str,
+        do_pool: bool = False,
+        show_plot: bool = False,
+        save_path: str = ".profiles/lwsvd_top/",
+):
+    """
+    plot the distribution of the weight matrix
+    """
+    import matplotlib.pyplot as plt
+
+    if do_pool:
+        # max_pool with kernel size 8
+        max_pool = torch.nn.MaxPool2d(kernel_size=8, stride=8)
+        W = max_pool(W.float().unsqueeze(dim=0)).squeeze()
+
+    # Create a 3x3 grid layout
+    fig = plt.figure(figsize=(16, 16))
+    gs = GridSpec(3, 3, width_ratios=[4, 10, 2], height_ratios=[4, 10, 2])
+
+    # Column sum histogram on the top
+    ax_col_hist = fig.add_subplot(gs[0, 1])
+    col_sum = W.sum(dim=0).cpu().numpy()
+    ax_col_hist.bar(range(W.shape[1]), col_sum, color='blue')
+    ax_col_hist.set(title='Column Sum')
+
+    # Row sum histogram on the left
+    ax_row_hist = fig.add_subplot(gs[1, 0])
+    row_sum = W.sum(dim=1).cpu().numpy()
+    ax_row_hist.barh(range(W.shape[0]), row_sum, color='red')
+    ax_row_hist.invert_yaxis()
+    ax_row_hist.set(title='Row Sum')
+
+    # Main plot (matrix image) in the bottom right
+    ax_main = fig.add_subplot(gs[1, 1])
+    im = ax_main.imshow(W.cpu().numpy(), vmin=W.min(), vmax=W.max())
+
+    # Add colorbar to the right of the matrix
+    ax_cbar = fig.add_subplot(gs[1, 2])
+    cbar = fig.colorbar(im, cax=ax_cbar)
+
+    if show_plot:
+        plt.show()
+
+    if save_path is not None:
+        fig_name = name.replace(".", "_")
+        plt.savefig(os.path.join(save_path, f"{fig_name}.png"))
+
+    plt.close()
+
+
 def linear_to_svdlinear(
         base_model,
         compress_ratio: float,
@@ -111,6 +162,7 @@ def linear_to_svdlinear(
         ipt_dict: [Dict[str, torch.Tensor], Dict[str, Tuple]] = None,
         memory_efficient: bool = True,
         print_info: bool = False,
+        plot_weight_dist: bool = False,
 ):
     """
     replace the linear module with the svd linear module
@@ -135,41 +187,8 @@ def linear_to_svdlinear(
                 # fisher weighted SVD
                 W = ipt_dict[name].T
 
-            # import matplotlib.pyplot as plt
-            # # # maxpool with kernel size 8
-            # # maxpool = torch.nn.MaxPool2d(kernel_size=8, stride=8)
-            # # w = maxpool(W.float().unsqueeze(dim=0)).squeeze()
-            #
-            # # Create a 3x3 grid layout
-            # fig = plt.figure(figsize=(16, 16))
-            # gs = GridSpec(3, 3, width_ratios=[4, 10, 2], height_ratios=[4, 10, 2])
-            #
-            # # Column sum histogram on the top
-            # ax_col_hist = fig.add_subplot(gs[0, 1])
-            # col_sum = W.sum(dim=0).cpu().numpy()
-            # ax_col_hist.bar(range(W.shape[1]), col_sum, color='blue')
-            # ax_col_hist.set(title='Column Sum')
-            #
-            # # Row sum histogram on the left
-            # ax_row_hist = fig.add_subplot(gs[1, 0])
-            # row_sum = W.sum(dim=1).cpu().numpy()
-            # ax_row_hist.barh(range(W.shape[0]), row_sum, color='red')
-            # ax_row_hist.invert_yaxis()
-            # ax_row_hist.set(title='Row Sum')
-            #
-            # # Main plot (matrix image) in the bottom right
-            # ax_main = fig.add_subplot(gs[1, 1])
-            # im = ax_main.imshow(W.cpu().numpy(), vmin=W.min(), vmax=W.max())
-            #
-            # # Add colorbar to the right of the matrix
-            # ax_cbar = fig.add_subplot(gs[1, 2])
-            # cbar = fig.colorbar(im, cax=ax_cbar)
-            # plt.show()
-            #
-            # # save the figure
-            # fig_name = name.replace(".", "_")
-            # plt.savefig(f"./.profiles/lwsvd/{fig_name}.png")
-            # plt.close()
+            if plot_weight_dist:
+                _plot_distribution(W, name)
 
             L1, L2 = weighted_svd_decomposition(
                 A,

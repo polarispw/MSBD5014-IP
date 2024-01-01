@@ -69,6 +69,7 @@ def svd_decomposition(
         U, S, V = torch.svd_lowrank(A, num_ranks)
         # https://pytorch.org/docs/stable/_modules/torch/_lowrank.html#svd_lowrank
         VT = V.mH
+        # VT = V.transpose(-2, -1)
     else:
         raise ValueError(f"`randomized` {randomized} not supported")
 

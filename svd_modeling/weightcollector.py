@@ -8,7 +8,7 @@ from transformers import TrainingArguments
 
 import svd_modeling
 from evaluate import preprocess_for_causallm
-from svd_modeling.mytrainer import NoOptimizerTrainer, LoRATrainer
+from svd_modeling.mytrainer import NoOptimizerTrainer
 
 
 def collect_fisher_info(
@@ -91,14 +91,14 @@ def collect_lora_info(
         gradient_checkpointing=False,
     )
 
-    trainer = LoRATrainer(
-        model=model,
-        peft_config=peft_config,
-        args=args,
-        train_dataset=dataset,
-    )
-
-    trainer.train()
+    # trainer = LoRATrainer(
+    #     model=model,
+    #     peft_config=peft_config,
+    #     args=args,
+    #     train_dataset=dataset,
+    # )
+    #
+    # trainer.train()
 
 
 def load_lora_info(
@@ -151,6 +151,7 @@ def run_collector(
     if collector_type == "fisher":
         ipt_dic = collect_fisher_info(model, target_params, dataset, batch_size, half_ipt, off_load)
     elif collector_type == "lora":
+        # use experiment/lorasvd.py instead
         collect_lora_info(model, dataset, batch_size)
     else:
         raise NotImplementedError
