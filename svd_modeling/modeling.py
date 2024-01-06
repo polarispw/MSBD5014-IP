@@ -1,6 +1,7 @@
 """
 build the SVD model from the original model
 """
+import math
 import os.path
 import sys
 from typing import List, Dict, Tuple
@@ -8,6 +9,7 @@ from typing import List, Dict, Tuple
 import numpy as np
 import torch
 import torch.nn as nn
+from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 from tqdm import tqdm
 
@@ -70,9 +72,11 @@ class LoRASVDLinear(SVDLinear):
 
 
 def process_lora_info(
+        A: torch.Tensor,
         lora_list: List[Tuple[torch.Tensor, torch.Tensor]],
-        return_lora_idx: int = 1,
-        scale_factor=1e-2,
+        return_lora_idx: int = 0,
+        retain_portion: float = 0.01,
+        scale_factor: float = 1e-3,
 ) -> (torch.Tensor, torch.Tensor, torch.Tensor):
     """
     return the lora info from domains for certain module
@@ -80,16 +84,25 @@ def process_lora_info(
     W = torch.zeros((lora_list[0][0].shape[0], lora_list[0][1].shape[1]), device=lora_list[0][0].device)
     for t in lora_list:
         W += torch.abs(t[0] @ t[1])
+    W = W / len(lora_list)
 
     # rescale to 0-1
-    w_min = W.min()
-    w_max = W.max()
-    W = (W - w_min) / (w_max - w_min)
-    W += 1e-7  # avoid zero division in weighted_svd_decomposition
+    # w_min = W.min()
+    # w_max = W.max()
+    # W = (W - w_min) / (w_max - w_min)
+    # W += 1e-7  # avoid zero division in weighted_svd_decomposition
+
+    # calculate fluctuation
+    B = torch.abs(A)
+    W = torch.abs(W)
+    W = torch.clamp(W / B, 0, 0.99)
+    W = -torch.log(W)
+    plt.hist(W.cpu().numpy().flatten(), bins=100)
+    plt.show()
 
     # retain top weights
-    flag = torch.quantile(W, 0.99)
-    W = torch.where(W >= flag, W, W * scale_factor)
+    threshold = - math.log(retain_portion)
+    W = torch.where(W >= threshold, W, W * scale_factor)
     return W, lora_list[return_lora_idx][0], lora_list[return_lora_idx][1]
 
 
@@ -107,8 +120,8 @@ def _plot_distribution(
         W: torch.Tensor,
         name: str,
         do_pool: bool = False,
-        show_plot: bool = False,
-        save_path: str = ".profiles/lwsvd_top/",
+        show_plot: bool = True,
+        save_path: str = None,
 ):
     """
     plot the distribution of the weight matrix
@@ -182,7 +195,7 @@ def linear_to_svdlinear(
         if ipt_dict is not None and name in ipt_dict:
             if isinstance(ipt_dict[name], List):
                 # lora weighted SVD
-                W, la, lb = process_lora_info(ipt_dict[name])
+                W, la, lb = process_lora_info(A, ipt_dict[name])
             else:
                 # fisher weighted SVD
                 W = ipt_dict[name].T
@@ -203,7 +216,7 @@ def linear_to_svdlinear(
         else:
             L1, L2 = svd_decomposition(
                 A,
-                randomized=True,
+                randomized=False,
                 num_ranks=num_ranks,
                 num_oversampling=10,
             )

@@ -261,13 +261,13 @@ def test_lwsvd(
 
     dir_list = [
         "lora_weights/ar/checkpoint-548/adapter_model.bin",
-        "lora_weights/en/checkpoint-196/adapter_model.bin",
-        "lora_weights/es/checkpoint-230/adapter_model.bin",
-        "lora_weights/fr/checkpoint-203/adapter_model.bin",
-        "lora_weights/ja/checkpoint-237/adapter_model.bin",
-        "lora_weights/ko/checkpoint-367/adapter_model.bin",
-        "lora_weights/ru/checkpoint-317/adapter_model.bin",
-        "lora_weights/zh/checkpoint-1689/adapter_model.bin",
+        # "lora_weights/en/checkpoint-196/adapter_model.bin",
+        # "lora_weights/es/checkpoint-230/adapter_model.bin",
+        # "lora_weights/fr/checkpoint-203/adapter_model.bin",
+        # "lora_weights/ja/checkpoint-237/adapter_model.bin",
+        # "lora_weights/ko/checkpoint-367/adapter_model.bin",
+        # "lora_weights/ru/checkpoint-317/adapter_model.bin",
+        # "lora_weights/zh/checkpoint-1689/adapter_model.bin",
     ]
     ipt_dic = load_lora_info(model.model, TARGET_MODULES, dir_list=dir_list)
     linear_to_svdlinear(model.model, compress_rate, TARGET_MODULES, ipt_dict=ipt_dic, print_info=True)

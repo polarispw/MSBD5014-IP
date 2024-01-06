@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument("--iptdict_dir", type=str, default=".cache/llama1b_fisher.pt")
     parser.add_argument("--compress_rate", type=float, default=0.1)
     parser.add_argument("--fine_tune", type=bool, default=False)
-    parser.add_argument("--half_model", type=bool, default=True)
+    parser.add_argument("--half_model", type=bool, default=False)
     parser.add_argument("--half_ipt", type=bool, default=True)
     args = parser.parse_args()
 
